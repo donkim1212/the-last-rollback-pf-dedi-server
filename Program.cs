@@ -3,13 +3,29 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using DotRecast.Recast;
+using DotRecast.Detour;
+using PathfindingDedicatedServer.Src.Constants;
+using PathfindingDedicatedServer.Src.Nav;
 
 namespace PathfindingDedicatedServer;
 public class Program
 {
     public static void Main()
     {
-        
+        DtNavMesh? mesh = NavMeshLoader.LoadNavMesh(NavMeshConstants.DUNGEON_01_NAVMESH_FILENAME);
+        if (mesh != null)
+        {
+            Console.WriteLine($"{NavMeshConstants.DUNGEON_01_NAVMESH_FILENAME} loaded succesfully.");
+            Console.WriteLine("MaxTiles: " + mesh.GetMaxTiles());
+            Console.WriteLine("MaxVertsPerPoly: " + mesh.GetMaxVertsPerPoly());
+        }
+
+        //InputGeomProvider? geom = NavMeshLoader.LoadInputMesh(NavMeshConstants.DUNGEON_01_OBJ_FILENAME);
+        //if (geom != null)
+        //{
+        //    Console.WriteLine("verts:" + geom.GetMesh().GetVerts());
+        //}
 
         // Start the TCP server
         StartTcpServer();
