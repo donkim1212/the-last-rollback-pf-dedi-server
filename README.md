@@ -5,6 +5,8 @@
  내배캠 스파르타 Node.js 5기 게임서버 최종 프로젝트
  12팀 'The Last Rollback' 의 길찾기 Dedicated Server 입니다.
 
+- [The Last Rollback](https://github.com/eliotjang/the-last-rollback-server) 프로젝트 repo
+
 <br> 
 
 ### 사용 라이브러리
