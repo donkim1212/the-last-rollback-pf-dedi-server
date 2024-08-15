@@ -66,10 +66,7 @@ public class TcpClientHandler
             incompleteData.RemoveRange(0, packetLength);
 
             Action<byte[]> handler = PacketManager.Instance.GetPacketHandler((int)packetType);
-            if (handler != null)
-            {
-                handler.Invoke(packetData);
-            }
+            handler?.Invoke(packetData);
         }
         /*string request = Encoding.UTF8.GetString(data, 0, length);
         OnDataReceived?.Invoke(request);
