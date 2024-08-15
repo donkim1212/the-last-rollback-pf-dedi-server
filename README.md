@@ -5,7 +5,13 @@
  내배캠 스파르타 Node.js 5기 게임서버 최종 프로젝트
  12팀 'The Last Rollback' 의 길찾기 Dedicated Server 입니다.
 
- <br> 
+<br> 
+
+### 사용 라이브러리
+- [DotRecast](https://github.com/ikpil/DotRecast?tab=readme-ov-file) by [ikpil](https://github.com/ikpil)  
+- [protobuf-net](https://github.com/protobuf-net/protobuf-net)
+
+<br>
 
 ## 스크린샷
 
