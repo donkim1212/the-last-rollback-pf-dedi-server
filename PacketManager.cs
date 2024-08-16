@@ -5,29 +5,29 @@ using PathfindingDedicatedServer.handlers.abstracts;
 
 public class PacketManager
 {
-    static readonly PacketManager _Instance = new PacketManager();
-    public static PacketManager Instance {  get { return _Instance; } }
+  static readonly PacketManager _Instance = new PacketManager();
+  public static PacketManager Instance {  get { return _Instance; } }
     
-    private Dictionary<int, PacketHandler> _handlers = [];
+  private Dictionary<int, PacketHandler> _handlers = [];
 
-    public PacketManager()
-    {
-        Register();
-    }
+  public PacketManager()
+  {
+    Register();
+  }
 
-    private void Register()
-    {
-        _handlers.Add((int)Packet.PacketType.TestRequest, new TestReqHandler()); // 예시
-    }
+  private void Register()
+  {
+    _handlers.Add((int)Packet.PacketType.TestRequest, new TestReqHandler()); // 예시
+  }
 
-    public Action<byte[]> GetPacketHandler(int id)
+  public Action<byte[]> GetPacketHandler(int id)
+  {
+    // PacketHandler handler;
+    if (_handlers.TryGetValue(id, out var handler))
     {
-        // PacketHandler handler;
-        if (_handlers.TryGetValue(id, out var handler))
-        {
-            return handler.HandlePacket;
-        }
-        Console.WriteLine($"Can't find handler with id {id}");
-        return null;
+      return handler.HandlePacket;
     }
+    Console.WriteLine($"Can't find handler with id {id}");
+    return null;
+  }
 }
