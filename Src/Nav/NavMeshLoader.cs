@@ -25,7 +25,7 @@ public class NavMeshLoader
         DtNavMesh? navMesh = LoadNavMesh(file);
         if (navMesh != null)
         {
-          NavMeshes.AddNavMesh(index, navMesh);
+          NavMeshManager.AddNavMesh(index, navMesh);
           Console.WriteLine($"Loaded file: {file}");
           float[] verts = navMesh.GetTile(1).data.verts;
           // Testing
