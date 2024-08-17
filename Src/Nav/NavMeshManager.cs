@@ -1,7 +1,7 @@
 ﻿using DotRecast.Detour;
 
 namespace PathfindingDedicatedServer.Src.Nav;
-public class NavMeshes
+public class NavMeshManager
 {
   private static readonly Dictionary<int, DtNavMesh> _navMeshes = [];
 
