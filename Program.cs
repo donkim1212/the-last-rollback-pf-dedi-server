@@ -3,27 +3,40 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using DotRecast.Recast;
-using DotRecast.Detour;
 using PathfindingDedicatedServer.Src.Constants;
 using PathfindingDedicatedServer.Src.Nav;
+using PathfindingDedicatedServer.Src.Nav.Crowds;
+using PathfindingDedicatedServer.Src.Network;
+using PathfindingDedicatedServer.Src.Utils;
 
 namespace PathfindingDedicatedServer;
 public class Program
 {
   public static void Main()
   {
-    // Load all NavMeshes
-    NavMeshLoader.LoadAllNavMeshAssets();
+    Init();
 
-    //InputGeomProvider? geom = NavMeshLoader.LoadInputMesh(NavMeshConstants.DUNGEON_01_OBJ_FILENAME);
-    //if (geom != null)
-    //{
-    //    Console.WriteLine("verts:" + geom.GetMesh().GetVerts());
-    //}
+    CrowdManager cm = new (1);
+    cm.Start();
+    cm.AddMonster(1);
+    Console.WriteLine("pos: " + cm.GetMonsterPos(1));
+
+    SchedulerUtils.SetIntervalAction(1000, () =>
+    {
+      Console.WriteLine("new pos: " + cm.GetMonsterPos(1));
+    });
 
     // Start the TCP server
     StartTcpServer();
+  }
+
+  private static void Init()
+  {
+    // Load all NavMeshes
+    NavMeshLoader.LoadAllNavMeshAssets();
+
+    // Initialize SpawnerManager
+    SpawnerManager.Init();
   }
 
   private static void StartTcpServer()
@@ -65,7 +78,7 @@ public class Program
         return;
       }
 
-      TcpClientHandler.TcpClientHandler handler = new (tcpClient);
+      TcpClientHandler handler = new (tcpClient);
 
       handler.OnDataReceived += (data) =>
       {
