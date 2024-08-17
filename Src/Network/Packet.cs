@@ -46,3 +46,6 @@ public class TestResponse
   [ProtoMember(1)]
   public string? TestStringValue { get; set; }
 }
+
+//[ProtoContract]
+//public class 
