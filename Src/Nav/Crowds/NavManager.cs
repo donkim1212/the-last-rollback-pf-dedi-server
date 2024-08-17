@@ -6,54 +6,54 @@ using PathfindingDedicatedServer.Src.Constants;
 
 namespace PathfindingDedicatedServer.Src.Nav.Crowds
 {
-  public enum CrowdManagerState
+  public enum NavManagerState
   {
     NONE, WAITING, RUNNING, ENDING
   }
 
-  public class CrowdManager
+  public class NavManager
   {
     private readonly DtCrowd _crowd;
     private readonly int _dungeonCode;
-    private CrowdManagerState _state = CrowdManagerState.NONE;
+    private NavManagerState _state = NavManagerState.NONE;
     private readonly int _tickRate = 500; // ms
 
     private readonly Dictionary<int, int> _monsters = [];
     private DateTime _startTime;
 
-    public CrowdManager(int dungeonCode) : this(dungeonCode, new DtCrowdConfig(0.6f), NavMeshManager.GetNavMesh(dungeonCode))
+    public NavManager(int dungeonCode) : this(dungeonCode, new DtCrowdConfig(0.6f), NavMeshManager.GetNavMesh(dungeonCode))
     {
     }
 
-    public CrowdManager(int dungeonCode, DtCrowdConfig config, DtNavMesh? navMesh)
+    public NavManager(int dungeonCode, DtCrowdConfig config, DtNavMesh? navMesh)
     {
       ArgumentNullException.ThrowIfNull(navMesh);
       _dungeonCode = dungeonCode;
       _crowd = new(config, navMesh);
-      _state = CrowdManagerState.WAITING;
+      _state = NavManagerState.WAITING;
     }
 
     public void Start()
     {
-      if (_state != CrowdManagerState.WAITING)
+      if (_state != NavManagerState.WAITING)
       {
         Console.WriteLine("CrowdManager is already running.");
         return;
       }
 
-      _state = CrowdManagerState.RUNNING;
+      _state = NavManagerState.RUNNING;
       _ = Task.Run(() => GameLoop());
     }
 
     public void End()
     {
       // TODO: cleanup?
-      _state = CrowdManagerState.ENDING;
+      _state = NavManagerState.ENDING;
     }
 
     public void Reset()
     {
-      _state = CrowdManagerState.WAITING;
+      _state = NavManagerState.WAITING;
     }
 
     private async Task GameLoop()
@@ -61,7 +61,7 @@ namespace PathfindingDedicatedServer.Src.Nav.Crowds
       _startTime = DateTime.Now;
       DateTime prevTime = _startTime;
       int count = 0;
-      while (_state == CrowdManagerState.RUNNING)
+      while (_state == NavManagerState.RUNNING)
       {
         DateTime curTime = DateTime.Now;
         
@@ -202,7 +202,7 @@ namespace PathfindingDedicatedServer.Src.Nav.Crowds
       }
     }
 
-    public CrowdManagerState GetState()
+    public NavManagerState GetState()
     {
       return _state;
     }

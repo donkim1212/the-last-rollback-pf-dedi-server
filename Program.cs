@@ -16,7 +16,7 @@ public class Program
   {
     Init();
 
-    CrowdManager cm = new (1);
+    NavManager cm = new (1);
     cm.Start();
     cm.AddMonster(1);
     Console.WriteLine("pos: " + cm.GetMonsterPos(1));
