@@ -1,13 +1,12 @@
-using System;
-using System.Net;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading;
 using PathfindingDedicatedServer.Src.Constants;
 using PathfindingDedicatedServer.Src.Nav;
 using PathfindingDedicatedServer.Src.Nav.Crowds;
 using PathfindingDedicatedServer.Src.Network;
 using PathfindingDedicatedServer.Src.Utils;
+using PathfindingDedicatedServer.Src.Utils.FileLoader;
+using PathfindingDedicatedServer.Src.Models;
+using System.Net;
+using System.Net.Sockets;
 
 namespace PathfindingDedicatedServer;
 public class Program
@@ -19,11 +18,14 @@ public class Program
     NavManager cm = new (1);
     cm.Start();
     cm.AddMonster(1);
+    cm.AddMonster(2);
     Console.WriteLine("pos: " + cm.GetMonsterPos(1));
+    Console.WriteLine("pos: " + cm.GetMonsterPos(2));
 
     SchedulerUtils.SetIntervalAction(1000, () =>
     {
-      Console.WriteLine("new pos: " + cm.GetMonsterPos(1));
+      Console.WriteLine($"[ 1 ] pos: " + cm.GetMonsterPos(1));
+      Console.WriteLine($"[ 2 ] pos: " + cm.GetMonsterPos(2));
     });
 
     // Start the TCP server
@@ -37,6 +39,11 @@ public class Program
 
     // Initialize SpawnerManager
     SpawnerManager.Init();
+
+    JsonFileLoader loader = new();
+    MonsterAgentData monsterData = loader.LoadFileFromAssets<MonsterAgentData>("MonsterAgentInfo.json");
+
+    Console.WriteLine($"Loaded {monsterData.Name}, version: {monsterData.Version}");
   }
 
   private static void StartTcpServer()
