@@ -245,7 +245,7 @@ namespace PathfindingDedicatedServer.Src.Nav.Crowds
 
     public void Halt(DtCrowdAgent agent)
     {
-      _crowd
+      //_crowd
       _crowd.ResetMoveTarget(agent);
     }
   }
