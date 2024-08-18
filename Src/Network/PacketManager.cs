@@ -1,7 +1,6 @@
-
-
 using PathfindingDedicatedServer.handlers;
 using PathfindingDedicatedServer.handlers.abstracts;
+using System.Net.Sockets;
 
 public class PacketManager
 {
@@ -20,7 +19,7 @@ public class PacketManager
     _handlers.Add((int)Packet.PacketType.TestRequest, new TestReqHandler()); // ¿¹½Ã
   }
 
-  public Action<byte[]> GetPacketHandler(int id)
+  public Action<NetworkStream, byte[]> GetPacketHandler(int id)
   {
     // PacketHandler handler;
     if (_handlers.TryGetValue(id, out var handler))
