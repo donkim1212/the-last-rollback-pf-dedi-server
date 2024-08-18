@@ -1,8 +1,6 @@
 ﻿using DotRecast.Core.Numerics;
 using DotRecast.Detour;
 using DotRecast.Detour.Crowd;
-using DotRecast.Recast;
-using PathfindingDedicatedServer.Src.Constants;
 
 namespace PathfindingDedicatedServer.Src.Nav.Crowds
 {
@@ -19,6 +17,8 @@ namespace PathfindingDedicatedServer.Src.Nav.Crowds
     private readonly int _tickRate = 500; // ms
 
     private readonly Dictionary<int, int> _monsters = [];
+    private readonly Dictionary<string, int> _players = [];
+    private readonly Dictionary<int, int> _structures = []; // won't move
     private DateTime _startTime;
 
     public NavManager(int dungeonCode) : this(dungeonCode, new DtCrowdConfig(0.6f), NavMeshManager.GetNavMesh(dungeonCode))
@@ -123,6 +123,16 @@ namespace PathfindingDedicatedServer.Src.Nav.Crowds
       }
     }
 
+    public void SetMonsters()
+    {
+
+    }
+
+    public void SetPlayers()
+    {
+
+    }
+
     /// <summary>
     /// Add a new monster to the given position, with the given option.
     /// </summary>
@@ -134,7 +144,7 @@ namespace PathfindingDedicatedServer.Src.Nav.Crowds
       // Add new agent
       DtCrowdAgent agent = _crowd.AddAgent(pos, option);
       _monsters.Add(monsterIdx, agent.idx);
-      Console.WriteLine($"monster[{monsterIdx}] spawned at Vector3({pos.X},{pos.Y},{pos.Z})");
+      Console.WriteLine($"monster[ {monsterIdx} ] spawned at Vector3({pos.X},{pos.Y},{pos.Z})");
 
       // Query NavMesh
       DtNavMeshQuery navQuery = _crowd.GetNavMeshQuery();
@@ -152,7 +162,7 @@ namespace PathfindingDedicatedServer.Src.Nav.Crowds
 
       // Set the agent's initial target
       _crowd.RequestMoveTarget(agent, nearestRef, nearestPt);
-      Console.WriteLine($"monsterIdx[{monsterIdx}] state: " + agent.state);
+      Console.WriteLine($"monsterIdx[ {monsterIdx} ] state: " + agent.state);
     }
 
     public void AddMonster(int monsterIdx, DtCrowdAgentParams option)
@@ -170,17 +180,28 @@ namespace PathfindingDedicatedServer.Src.Nav.Crowds
       {
         radius = 0.6f,
         height = 1.5f,
-        maxAcceleration = 5f,
-        maxSpeed = 3.5f,
+        maxAcceleration = 1000f,
+        maxSpeed = 2f,
         collisionQueryRange = 0.6f,
         pathOptimizationRange = 10f, // temp
         separationWeight = 0,
         updateFlags = DtCrowdAgentUpdateFlags.DT_CROWD_ANTICIPATE_TURNS,
-        obstacleAvoidanceType = 2,
+        obstacleAvoidanceType = 0,
         queryFilterType = 0,
         userData = new(),
       };
       AddMonster(monsterIdx, option);
+    }
+
+    public void AddPlayer(string accountId, RcVec3f pos, DtCrowdAgentParams option)
+    {
+      // TODO:
+      //_players.Add();
+    }
+
+    public void AddStructure(int structureIdx, RcVec3f pos, DtCrowdAgentParams option)
+    {
+      // TODO:
     }
 
     public DtCrowdAgent GetMonsterAgent (int monsterIdx)
@@ -205,6 +226,27 @@ namespace PathfindingDedicatedServer.Src.Nav.Crowds
     public NavManagerState GetState()
     {
       return _state;
+    }
+
+    public void SetMonsterDest(string accountId)
+    {
+
+    }
+
+    public void SetMonsterDest(int structureIdx)
+    {
+
+    }
+
+    public void SetPlayerDest(RcVec3f pos)
+    {
+      
+    }
+
+    public void Halt(DtCrowdAgent agent)
+    {
+      _crowd
+      _crowd.ResetMoveTarget(agent);
     }
   }
 }
