@@ -1,8 +1,11 @@
+using PathfindingDedicatedServer.Src.Nav.Crowds;
+using System.Net;
 using System.Net.Sockets;
 
 namespace PathfindingDedicatedServer.Src.Network;
 public class TcpClientHandler
 {
+  private readonly Guid _id;
   private readonly TcpClient _tcpClient;
   private readonly NetworkStream _stream;
   private List<byte> incompleteData = new List<byte>();
@@ -11,6 +14,7 @@ public class TcpClientHandler
 
   public TcpClientHandler(TcpClient tcpClient)
   {
+    _id = Guid.NewGuid();
     _tcpClient = tcpClient;
     _stream = _tcpClient.GetStream();
   }
@@ -18,7 +22,6 @@ public class TcpClientHandler
   public async Task StartHandlingClientAsync()
   {
     byte[] buffer = new byte[2048];
-
     try
     {
       while (_tcpClient.Connected)
@@ -38,6 +41,8 @@ public class TcpClientHandler
     }
     finally
     {
+      IPEndPoint? endPoint = _tcpClient.GetStream().Socket.RemoteEndPoint as IPEndPoint;
+      Console.WriteLine($"[{endPoint?.Address}:{endPoint?.Port}] TcpClient closed.");
       _tcpClient.Close();
     }
   }

@@ -6,8 +6,17 @@ public class Packet
   public enum PacketType
   {
     None = 0,
-    TestRequest = 1,
-    TestResponse = 2,
+
+    C_CreateSession = 10,
+    
+    C_SetPlayers = 11,
+    C_SetMonsters = 12,
+    C_SetPlayerDest = 13,
+    C_SetMonsterDest = 14,
+
+    S_PlayerLocationUpdate = 31,
+    S_MonstersLocationUpdate = 32,
+
   }
 
   public static void Serialize<T>(IBufferWriter<byte> writer, T data)
@@ -30,22 +39,14 @@ public class Packet
   }
 }
 
-[ProtoContract]
-public class TestRequest
-{
-  [ProtoMember(1)]
-  public uint TestIntValue { get; set; }
-  public string? Message { get; set; }
-}
-
-[ProtoContract]
-public class TestResponse
-{
-  [ProtoMember(1)]
-  public string? TestStringValue { get; set; }
-}
-
 // ----- IN -----
+
+[ProtoContract]
+public class C_CreateSession
+{
+  [ProtoMember(1)]
+  public int DungeonCode { get; set; }
+}
 
 [ProtoContract]
 public class C_SetPlayers
@@ -82,17 +83,17 @@ public class C_SetMonsterDest
 // ----- OUT -----
 
 [ProtoContract]
-public class S_MonstersLocationUpdate
+public class S_PlayersLocationUpdate
 {
-  [ProtoMember(1)] // monsterIdx : Vector3 (X,Y,Z)
-  public Dictionary<uint, WorldPosition> MonsterPositions { get; set; }
+  [ProtoMember(1)] // accountId : Vector3 (X,Y,Z)
+  public Dictionary<string, WorldPosition> Positions { get; set; }
 }
 
 [ProtoContract]
-public class S_PlayerLocationUpdate
+public class S_MonstersLocationUpdate
 {
-  [ProtoMember(1)] // accountId : Vector3 (X,Y,Z)
-  public Dictionary<string, WorldPosition> PlayerPositions { get; set; }
+  [ProtoMember(1)] // monsterIdx : Vector3 (X,Y,Z)
+  public Dictionary<uint, WorldPosition> Positions { get; set; }
 }
 
 // // ----- ETC -----
