@@ -1,5 +1,4 @@
-﻿using System;
-using DotRecast.Core.Numerics;
+﻿using DotRecast.Core.Numerics;
 using PathfindingDedicatedServer.Src.Constants;
 
 namespace PathfindingDedicatedServer.Src.Nav;
