@@ -64,8 +64,8 @@ public class TcpClientHandler
       byte[] packetData = incompleteData.GetRange(5, packetLength - 5).ToArray();
       incompleteData.RemoveRange(0, packetLength);
 
-      Action<NetworkStream, byte[]> handler = PacketManager.Instance.GetPacketHandler((int)packetType);
-      handler?.Invoke(_tcpClient.GetStream(), packetData);
+      Action<NetworkStream, Guid, byte[]> handler = PacketManager.Instance.GetPacketHandler((int)packetType);
+      handler?.Invoke(_tcpClient.GetStream(), _id, packetData);
     }
     /*string request = Encoding.UTF8.GetString(data, 0, length);
     OnDataReceived?.Invoke(request);
