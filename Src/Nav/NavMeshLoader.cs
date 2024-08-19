@@ -18,7 +18,7 @@ public class NavMeshLoader
     try
     {
       // TODO: map the indices somehow
-      int index = 1;
+      uint index = 1;
       string[] files = Directory.GetFiles(PathConstants.ASSETS_REL_PATH, PathConstants.NAVMESH_EXT, SearchOption.AllDirectories);
       foreach (string file in files)
       {

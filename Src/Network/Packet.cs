@@ -45,7 +45,7 @@ public class Packet
 public class C_CreateSession
 {
   [ProtoMember(1)]
-  public int DungeonCode { get; set; }
+  public uint DungeonCode { get; set; }
 }
 
 [ProtoContract]

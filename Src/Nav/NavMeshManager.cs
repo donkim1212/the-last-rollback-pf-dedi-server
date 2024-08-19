@@ -3,18 +3,18 @@
 namespace PathfindingDedicatedServer.Nav;
 public class NavMeshManager
 {
-  private static readonly Dictionary<int, DtNavMesh> _navMeshes = [];
+  private static readonly Dictionary<uint, DtNavMesh> _navMeshes = [];
 
-  public static void AddNavMesh (int id, DtNavMesh navMesh)
+  public static void AddNavMesh (uint dungeonCode, DtNavMesh navMesh)
   {
-    ArgumentNullException.ThrowIfNull(id);
+    ArgumentNullException.ThrowIfNull(dungeonCode);
     ArgumentNullException.ThrowIfNull(navMesh);
-    _navMeshes.Add(id, navMesh);
+    _navMeshes.Add(dungeonCode, navMesh);
   }
 
-  public static DtNavMesh? GetNavMesh(int id)
+  public static DtNavMesh? GetNavMesh(uint dungeonCode)
   {
-    return _navMeshes[id];
+    return _navMeshes[dungeonCode];
   }
 
   //public static void RemoveNavMesh(int id)

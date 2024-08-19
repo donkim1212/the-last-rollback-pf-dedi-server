@@ -9,7 +9,7 @@ namespace PathfindingDedicatedServer.Src.Sessions
     
     private readonly NavManager _navManager;
 
-    public static bool AddSession(int dungeonCode, Guid guid)
+    public static bool AddSession(uint dungeonCode, Guid guid)
     {
       return _sessions.TryAdd(guid, new Session(dungeonCode));
     }
@@ -30,7 +30,7 @@ namespace PathfindingDedicatedServer.Src.Sessions
       return exists;
     }
     
-    public Session (int dungeonCode)
+    public Session (uint dungeonCode)
     {
       _navManager = new NavManager(dungeonCode);
     }
