@@ -39,18 +39,9 @@ public class Program
     // Load all NavMeshes
     NavMeshLoader.LoadAllNavMeshAssets();
 
-    // Initialize SpawnerManager
-    SpawnerManager.Init();
+    // Initialize Storage
+    Storage.InitStorage();
 
-    JsonFileLoader loader = new();
-    MonsterAgentData monsterData = loader.LoadFileFromAssets<MonsterAgentData>("MonsterAgentInfo.json");
-    Storage.MonsterAgentData = monsterData;
-    Console.WriteLine($"Loaded {monsterData.Name}, version: {monsterData.Version}");
-    Console.WriteLine($"-- {monsterData.Data.First().MonsterModel}");
-    PlayerAgentData playerData = loader.LoadFileFromAssets<PlayerAgentData>("PlayerAgentInfo.json");
-    Storage.PlayerAgentData = playerData;
-    Console.WriteLine($"Loaded {playerData.Name}, version: {playerData.Version}");
-    Console.WriteLine($"-- {playerData.Data.First().CharClass}");
     DateTime endTime = DateTime.UtcNow;
     Console.WriteLine();
     Console.WriteLine($"Elapsed time: {(endTime - startTime).TotalSeconds}s");
