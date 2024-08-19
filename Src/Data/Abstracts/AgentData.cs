@@ -1,8 +1,7 @@
-﻿namespace PathfindingDedicatedServer.Src.Models
+﻿namespace PathfindingDedicatedServer.Src.Data.Abstracts
 {
-  public class MonsterInfo
+  public class AgentInfo()
   {
-    public int MonsterModel { get; set; }
     public float Radius { get; set; }
     public float Height { get; set; }
     public float MaxAcc { get; set; }
@@ -15,10 +14,10 @@
     public int QueryFilterType { get; set; }
   }
 
-  public class MonsterAgentData
+  public class AgentData<T> where T : AgentInfo
   {
     public string Name { get; set; }
     public string Version { get; set; }
-    public List<MonsterInfo> Data { get; set; }
+    public virtual List<T> Data { get; set; }
   }
 }

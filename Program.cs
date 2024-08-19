@@ -4,9 +4,9 @@ using PathfindingDedicatedServer.Nav.Crowds;
 using PathfindingDedicatedServer.Src.Network;
 using PathfindingDedicatedServer.Src.Utils;
 using PathfindingDedicatedServer.Src.Utils.FileLoader;
-using PathfindingDedicatedServer.Src.Models;
 using System.Net;
 using System.Net.Sockets;
+using PathfindingDedicatedServer.Src.Data;
 
 namespace PathfindingDedicatedServer;
 public class Program
@@ -34,6 +34,8 @@ public class Program
 
   private static void Init()
   {
+    Console.WriteLine("----- INIT START -----");
+    DateTime startTime = DateTime.UtcNow;
     // Load all NavMeshes
     NavMeshLoader.LoadAllNavMeshAssets();
 
@@ -42,8 +44,17 @@ public class Program
 
     JsonFileLoader loader = new();
     MonsterAgentData monsterData = loader.LoadFileFromAssets<MonsterAgentData>("MonsterAgentInfo.json");
-
+    Storage.MonsterAgentData = monsterData;
     Console.WriteLine($"Loaded {monsterData.Name}, version: {monsterData.Version}");
+    Console.WriteLine($"-- {monsterData.Data.First().MonsterModel}");
+    PlayerAgentData playerData = loader.LoadFileFromAssets<PlayerAgentData>("PlayerAgentInfo.json");
+    Storage.PlayerAgentData = playerData;
+    Console.WriteLine($"Loaded {playerData.Name}, version: {playerData.Version}");
+    Console.WriteLine($"-- {playerData.Data.First().CharClass}");
+    DateTime endTime = DateTime.UtcNow;
+    Console.WriteLine();
+    Console.WriteLine($"Elapsed time: {(endTime - startTime).TotalSeconds}s");
+    Console.WriteLine("----- INIT END -----");
   }
 
   private static void StartTcpServer()

@@ -1,0 +1,71 @@
+﻿{
+  "name": "player_agent_info",
+  "version": "1.0.0",
+  "data": [
+    {
+      "charClass": 1001,
+      "radius": 3.0,
+      "height": 1.5,
+      "maxAcc": 100.0,
+      "maxSpd": 5.0,
+      "collisionQueryRange": 0.5,
+      "pathOptRange": 15.0,
+      "separationWeight": 0,
+      "updateFlags": 1,
+      "obsAvoidanceType": 0,
+      "queryFilterType": 0
+    },
+    {
+      "monsterModel": 1002,
+      "radius": 3.0,
+      "height": 1.5,
+      "maxAcc": 100.0,
+      "maxSpd": 5.3,
+      "collisionQueryRange": 0.5,
+      "pathOptRange": 15.0,
+      "separationWeight": 0,
+      "updateFlags": 1,
+      "obsAvoidanceType": 0,
+      "queryFilterType": 0
+    },
+    {
+      "monsterModel": 1003,
+      "radius": 3.0,
+      "height": 1.5,
+      "maxAcc": 100.0,
+      "maxSpd": 4.2,
+      "collisionQueryRange": 0.5,
+      "pathOptRange": 15.0,
+      "separationWeight": 0,
+      "updateFlags": 1,
+      "obsAvoidanceType": 0,
+      "queryFilterType": 0
+    },
+    {
+      "monsterModel": 1004,
+      "radius": 3.0,
+      "height": 1.5,
+      "maxAcc": 100.0,
+      "maxSpd": 4.8,
+      "collisionQueryRange": 0.5,
+      "pathOptRange": 15.0,
+      "separationWeight": 0,
+      "updateFlags": 1,
+      "obsAvoidanceType": 0,
+      "queryFilterType": 0
+    },
+    {
+      "monsterModel": 1005,
+      "radius": 3.0,
+      "height": 1.5,
+      "maxAcc": 100.0,
+      "maxSpd": 3.8,
+      "collisionQueryRange": 0.5,
+      "pathOptRange": 15.0,
+      "separationWeight": 0,
+      "updateFlags": 1,
+      "obsAvoidanceType": 0,
+      "queryFilterType": 0
+    }
+  ]
+}
