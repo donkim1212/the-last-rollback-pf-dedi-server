@@ -11,7 +11,7 @@ namespace PathfindingDedicatedServer.Src.Handlers
       C_CreateSession packet = Deserialize<C_CreateSession>(bytes);
       // TODO: create a session
       
-      Session.AddSession(packet.DungeonCode);
+      Session.AddSession(packet.DungeonCode, id);
     }
   }
 }
