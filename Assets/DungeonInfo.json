@@ -1,0 +1,14 @@
+{
+  "name": "dungeon_info",
+  "version": "1.0.0",
+  "data": [
+    {"id": 10, "dungeonCode": 1, "posType": 0, "x": -5.64, "y": -0.5953, "z": 121.6},
+    {"id": 11, "dungeonCode": 1, "posType": 1, "x": 43.5, "y": 1.72, "z": 119.63},
+    {"id": 12, "dungeonCode": 1, "posType": 1, "x": -5.93, "y": 1.06, "z": 92.43},
+    {"id": 13, "dungeonCode": 1, "posType": 1, "x": -46.71, "y": 0.48, "z": 132.75},
+    {"id": 14, "dungeonCode": 1, "posType": 1, "x": -41.66, "y": 0.48, "z": 90.63},
+    {"id": 15, "dungeonCode": 1, "posType": 1, "x": 35.48, "y": 0.48, "z": 88.26},
+	  {"id": 16, "dungeonCode": 1, "posType": 5, "x": -5.04, "y": 0.55, "z": 135.68}
+  ]
+}
+
