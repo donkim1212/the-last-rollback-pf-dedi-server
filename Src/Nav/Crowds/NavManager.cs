@@ -1,6 +1,9 @@
-﻿using DotRecast.Core.Numerics;
+﻿using DotRecast.Core;
+using DotRecast.Core.Numerics;
 using DotRecast.Detour;
 using DotRecast.Detour.Crowd;
+using PathfindingDedicatedServer.Src.Constants;
+using PathfindingDedicatedServer.Src.Data;
 
 namespace PathfindingDedicatedServer.Nav.Crowds
 {
@@ -9,23 +12,33 @@ namespace PathfindingDedicatedServer.Nav.Crowds
     NONE, WAITING, RUNNING, ENDING
   }
 
+  internal class DtNavMeshQueryResult
+  {
+    public long NearestRef { get; set; }
+    public RcVec3f NearestPt { get; set; }
+    public bool IsOverPoly { get; set; }
+  }
+
   public class NavManager
   {
     private readonly DtCrowd _crowd;
-    private readonly int _dungeonCode;
+    private readonly uint _dungeonCode;
     private NavManagerState _state = NavManagerState.NONE;
     private readonly int _tickRate = 500; // ms
 
-    private readonly Dictionary<int, int> _monsters = [];
-    private readonly Dictionary<string, int> _players = [];
-    private readonly Dictionary<int, int> _structures = []; // won't move
+    private readonly Dictionary<uint, int> _monsterAgents = []; // monsterIdx, agentIdx
+    private readonly Dictionary<uint, DtCrowdAgentParams> _monsterOptions = [];
+    private readonly Dictionary<string, int> _playerAgents = []; // accountId, agentIdx
+    private readonly Dictionary<string, DtCrowdAgentParams> _playerOptions = [];
+    private readonly Dictionary<uint, int> _structureAgents = []; // structureIdx, agentIdx / won't move
+    private readonly Dictionary<uint, DtCrowdAgentParams> _structureOptions = [];
     private DateTime _startTime;
 
-    public NavManager(int dungeonCode) : this(dungeonCode, new DtCrowdConfig(0.6f), NavMeshManager.GetNavMesh(dungeonCode))
+    public NavManager(uint dungeonCode) : this(dungeonCode, new DtCrowdConfig(0.6f), NavMeshManager.GetNavMesh(dungeonCode))
     {
     }
 
-    public NavManager(int dungeonCode, DtCrowdConfig config, DtNavMesh? navMesh)
+    public NavManager(uint dungeonCode, DtCrowdConfig config, DtNavMesh? navMesh)
     {
       ArgumentNullException.ThrowIfNull(navMesh);
       _dungeonCode = dungeonCode;
@@ -64,15 +77,15 @@ namespace PathfindingDedicatedServer.Nav.Crowds
       while (_state == NavManagerState.RUNNING)
       {
         DateTime curTime = DateTime.Now;
-        
-        float deltaTime = (float) (curTime - prevTime).TotalSeconds;
+
+        float deltaTime = (float)(curTime - prevTime).TotalSeconds;
         Update(deltaTime);
         Console.WriteLine($"[{count++}], deltaTime: {deltaTime}s");
 
         double elapsed = (DateTime.Now - curTime).TotalMilliseconds;
         if (elapsed < _tickRate)
         {
-          await Task.Delay(_tickRate - (int) elapsed);
+          await Task.Delay(_tickRate - (int)elapsed);
         }
         prevTime = curTime;
 
@@ -101,7 +114,7 @@ namespace PathfindingDedicatedServer.Nav.Crowds
       Object data = new();
 
       // wrap up agents data
-      foreach (int monsterIdx in _monsters.Keys)
+      foreach (uint monsterIdx in _monsterAgents.Keys)
       {
         // TODO: monster position, aggro, attack target?
         DtCrowdAgent agent = GetMonsterAgent(monsterIdx);
@@ -109,12 +122,17 @@ namespace PathfindingDedicatedServer.Nav.Crowds
       }
     }
 
-    public RcVec3f? GetMonsterPos (int monsterIdx)
+    public RcVec3f GetPosition(DtCrowdAgent agent)
+    {
+      return agent.npos;
+    }
+
+    public RcVec3f? GetMonsterPos(uint monsterIdx)
     {
       try
       {
         DtCrowdAgent agent = GetMonsterAgent(monsterIdx);
-        return agent.npos;
+        return GetPosition(agent);
       }
       catch (Exception e)
       {
@@ -123,14 +141,45 @@ namespace PathfindingDedicatedServer.Nav.Crowds
       }
     }
 
-    public void SetMonsters()
+    public RcVec3f? GetPlayerPos(string accountId)
     {
-
+      try
+      {
+        DtCrowdAgent agent = GetPlayerAgent(accountId);
+        return GetPosition(agent);
+      }
+      catch (Exception e)
+      {
+        Console.WriteLine($"GetPlayerPos Error: {e.Message}");
+        return null;
+      }
     }
 
-    public void SetPlayers()
+    private DtNavMeshQueryResult GetNavMeshQueryResult(RcVec3f pos, float hRad, float vRad)
     {
+      return GetNavMeshQueryResult(pos, hRad, vRad, _crowd.GetFilter(0));
+    }
 
+    private DtNavMeshQueryResult GetNavMeshQueryResult(RcVec3f pos, float hRad, float vRad, IDtQueryFilter filter)
+    {
+      DtNavMeshQuery navQuery = _crowd.GetNavMeshQuery();
+
+      RcVec3f halfExtents = new (hRad, vRad, hRad);
+      navQuery.FindNearestPoly(
+        pos,
+        halfExtents,
+        filter,
+        out long nearestRef,
+        out RcVec3f nearestPt,
+        out bool isOverPoly
+      );
+
+      return new()
+      {
+        NearestRef = nearestRef,
+        NearestPt = nearestPt,
+        IsOverPoly = isOverPoly
+      };
     }
 
     /// <summary>
@@ -139,88 +188,70 @@ namespace PathfindingDedicatedServer.Nav.Crowds
     /// <param name="monsterIdx">monster's index to be added to _monsters list</param>
     /// <param name="pos">vector position on navMesh the mosnter is to be spwawned at</param>
     /// <param name="option">crowd agent's option parameters</param>
-    public void AddMonster(int monsterIdx, RcVec3f pos, DtCrowdAgentParams option)
+    public void AddMonster(uint monsterIdx, RcVec3f pos, DtCrowdAgentParams option)
     {
       // Add new agent
       DtCrowdAgent agent = _crowd.AddAgent(pos, option);
-      _monsters.Add(monsterIdx, agent.idx);
+      _monsterAgents.Add(monsterIdx, agent.idx);
       Console.WriteLine($"monster[ {monsterIdx} ] spawned at Vector3({pos.X},{pos.Y},{pos.Z})");
 
       // Query NavMesh
-      DtNavMeshQuery navQuery = _crowd.GetNavMeshQuery();
       RcVec3f center = new(-5.04f, 0.55f, 135.68f);
       RcVec3f halfExtents = new(3f, 1.5f, 3f);
-      
-      navQuery.FindNearestPoly(
-        center,
-        halfExtents,
-        new DtQueryDefaultFilter(),
-        out long nearestRef,
-        out RcVec3f nearestPt,
-        out bool isOverPoly
-      );
+      DtNavMeshQueryResult result = GetNavMeshQueryResult(center, 3f, 1.5f);
 
       // Set the agent's initial target
-      _crowd.RequestMoveTarget(agent, nearestRef, nearestPt);
+      _crowd.RequestMoveTarget(agent, result.NearestRef, result.NearestPt);
       Console.WriteLine($"monsterIdx[ {monsterIdx} ] state: " + agent.state);
     }
 
-    public void AddMonster(int monsterIdx, DtCrowdAgentParams option)
+    public void AddMonster(uint monsterIdx, DtCrowdAgentParams option)
     {
       // TODO: create a external function to get a random spawn position on a map
-      RcVec3f spawnPos = SpawnerManager.GetRandomSpawnerPosition(_dungeonCode, 1234);
+      RcVec3f spawnPos = Storage.GetRandomPos(_dungeonCode, PosType.MONSTER_SPAWNER);
       AddMonster(monsterIdx, spawnPos, option);
     }
 
-    public void AddMonster(int monsterIdx)
+    public void AddMonster(uint monsterIdx, uint monsterModel)
     {
-      // TODO: fetch monster's agent param stats from JSON
-
-      DtCrowdAgentParams option = new() // temp stats
-      {
-        radius = 0.6f,
-        height = 1.5f,
-        maxAcceleration = 1000f,
-        maxSpeed = 2f,
-        collisionQueryRange = 0.6f,
-        pathOptimizationRange = 10f, // temp
-        separationWeight = 0,
-        updateFlags = DtCrowdAgentUpdateFlags.DT_CROWD_ANTICIPATE_TURNS,
-        obstacleAvoidanceType = 0,
-        queryFilterType = 0,
-        userData = new(),
-      };
+      DtCrowdAgentParams option = Storage.GetMonsterAgentInfo(monsterModel);
       AddMonster(monsterIdx, option);
     }
 
-    public void AddPlayer(string accountId, RcVec3f pos, DtCrowdAgentParams option)
+    public void AddMonster(uint monsterIdx)
     {
-      // TODO:
-      //_players.Add();
+      DtCrowdAgentParams option = Storage.GetDefaultAgentInfo();
+      AddMonster(monsterIdx, option);
     }
 
-    public void AddStructure(int structureIdx, RcVec3f pos, DtCrowdAgentParams option)
+    public DtCrowdAgent GetMonsterAgent (uint monsterIdx)
     {
-      // TODO:
+      return _crowd.GetAgent(_monsterAgents[monsterIdx]);
     }
 
-    public DtCrowdAgent GetMonsterAgent (int monsterIdx)
+    public DtCrowdAgent GetPlayerAgent (string accountId)
     {
-      return _crowd.GetAgent(_monsters[monsterIdx]);
+      return _crowd.GetAgent(_playerAgents[accountId]);
     }
 
-    public void RemoveMonster(int monsterIdx)
+    public DtCrowdAgent GetStructureAgent(uint structureIdx)
+    {
+      return _crowd.GetAgent(_structureAgents[structureIdx]);
+    }
+
+    public void RemoveMonster(uint monsterIdx)
     {
       _crowd.RemoveAgent(GetMonsterAgent(monsterIdx));
-      _monsters.Remove(monsterIdx);
     }
 
     public void ClearMonsters()
     {
-      foreach(int monsterIdx in _monsters.Keys)
+      foreach(uint monsterIdx in _monsterAgents.Keys)
       {
         RemoveMonster(monsterIdx);
       }
+      _monsterAgents.Clear();
+      //_monsterOptions.Clear();
     }
 
     public NavManagerState GetState()
@@ -228,25 +259,124 @@ namespace PathfindingDedicatedServer.Nav.Crowds
       return _state;
     }
 
-    public void SetMonsterDest(string accountId)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="monsters">key: monsterIdx, value: monsterModel</param>
+    public void SetMonsters(Dictionary<uint, uint> monsters)
     {
-
+      _monsterOptions.Clear();
+      foreach (uint monsterIdx in monsters.Keys)
+      {
+        monsters.TryGetValue(monsterIdx, out uint monsterModel);
+        _monsterOptions.Add(monsterIdx, Storage.GetMonsterAgentInfo(monsterModel));
+      }
     }
 
-    public void SetMonsterDest(int structureIdx)
+    public void SetPlayers(Dictionary<string, uint> players)
     {
-
+      foreach (string accountId in players.Keys)
+      {
+        players.TryGetValue(accountId, out uint charClass);
+        _playerOptions.Add(accountId, Storage.GetPlayerAgentInfo(charClass));
+        
+        // Add the player to the DtCrowd manager
+        RcVec3f center = Storage.GetRandomPos(_dungeonCode, PosType.PLAYER_SPAWNER);
+        DtNavMeshQueryResult result = GetNavMeshQueryResult(center, 3f, 1.5f);
+        // TODO: handle DtStatus
+        _crowd.GetNavMeshQuery().FindRandomPointWithinCircle(
+          result.NearestRef,
+          center,
+          5f,
+          _crowd.GetFilter(0),
+          new RcRand(),
+          out long randomRef,
+          out RcVec3f randomPt
+        );
+        AddPlayer(accountId, randomPt, Storage.GetPlayerAgentInfo(charClass));
+      }
     }
 
-    public void SetPlayerDest(RcVec3f pos)
+    public void AddPlayer(string accountId, RcVec3f pos, DtCrowdAgentParams option)
     {
-      
+      _playerAgents.Add(accountId, _crowd.AddAgent(pos, option).idx);
+    }
+
+    public void AddStructure(uint structureIdx, RcVec3f pos, DtCrowdAgentParams option)
+    {
+      _structureAgents.Add(structureIdx, _crowd.AddAgent(pos, option).idx);
+    }
+
+    public void SetMonsterDest(uint monsterIdx, TargetStructure target)
+    {
+      //RcVec3f? targetPos = GetStructurePos(target.StructureIdx);
+    }
+
+    public void SetMonsterDest(uint monsterIdx, TargetPlayer target)
+    {
+      RcVec3f? targetPos = GetPlayerPos(target.AccountId);
+      if (targetPos == null)
+      {
+        // TODO: set target to Base
+        
+        //Halt(monsterIdx);
+        return;
+      }
+
+      DtNavMeshQueryResult result = GetNavMeshQueryResult(targetPos.Value, 3f, 1.5f);
+      _crowd.RequestMoveTarget(GetMonsterAgent(monsterIdx), result.NearestRef, targetPos.Value);
+    }
+
+    public void SetPlayerDest(string accountId, RcVec3f pos)
+    {
+      var result = GetNavMeshQueryResult(pos, 3f, 1.5f, new DtQueryDefaultFilter());
+      _crowd.RequestMoveTarget(GetPlayerAgent(accountId), result.NearestRef, pos);
+    }
+
+    public void MoveToBase (DtCrowdAgent agent)
+    {
+
+      //DtNavMeshQuery query = _crowd.GetNavMeshQuery();
+      // TODO: Get Base's poly ref
+      //query.FindNearestPoly(
+      //  Storage.GetPos(_dungeonCode, PosType.BASE_SPAWNER, 0),
+      //  new RcVec3f(3f, 1.5f, 3f),
+      //  _crowd.GetFilter(0),
+      //  out long nearestRef,
+      //  out RcVec3f nearestPt,
+      //  out bool isOverPoly
+      //);
+
+      //List<long> resultRef = [];
+      //List<long> resultParent = [];
+      //List<float> resultCost = [];
+      // TODO: Get nearest circular border point of the Base
+      //query.FindPolysAroundCircle(
+      //  agent.corridor.GetFirstPoly(),
+      //  nearestPt,
+      //  3f,
+      //  _crowd.GetFilter(0),
+      //  ref resultRef,
+      //  ref resultParent,
+      //  ref resultCost
+      //);
+
+      //_crowd.RequestMoveTarget(agent, resultRef.First(), )
     }
 
     public void Halt(DtCrowdAgent agent)
     {
-      //_crowd
       _crowd.ResetMoveTarget(agent);
+    }
+
+    public void Halt(string accountId)
+    {
+      Halt(GetPlayerAgent(accountId));
+    }
+
+    public void Halt(uint monsterIdx)
+    {
+      Halt(GetMonsterAgent(monsterIdx));
     }
   }
 }
