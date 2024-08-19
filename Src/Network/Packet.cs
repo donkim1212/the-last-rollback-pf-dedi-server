@@ -75,9 +75,9 @@ public class C_SetPlayerDest
 public class C_SetMonsterDest
 {
   [ProtoMember(1)]
-  public uint monsterIdx { get; set; }
+  public uint MonsterIdx { get; set; }
   [ProtoMember(2)]
-  public WorldPosition? Pos { get; set; }
+  public Target? Target { get; set; }
 }
 
 // ----- OUT -----
@@ -107,6 +107,27 @@ public class WorldPosition
   public float Y { get; set; }
   [ProtoMember(3)]
   public float Z { get; set; }
+}
+
+[ProtoContract]
+[ProtoInclude(1, typeof(TargetPlayer))]
+[ProtoInclude(2, typeof(TargetStructure))]
+public class Target
+{
+}
+
+[ProtoContract]
+public class TargetPlayer : Target
+{
+  [ProtoMember(1)]
+  public string AccountId { get; set; }
+}
+
+[ProtoContract]
+public class TargetStructure : Target
+{
+  [ProtoMember(1)]
+  public uint StructureIdx { get; set; }
 }
 
 //[ProtoContract]

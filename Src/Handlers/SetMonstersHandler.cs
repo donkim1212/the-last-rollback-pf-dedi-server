@@ -1,5 +1,6 @@
 ﻿using System.Net.Sockets;
 using PathfindingDedicatedServer.handlers.abstracts;
+using PathfindingDedicatedServer.Src.Sessions;
 
 namespace PathfindingDedicatedServer.Src.Handlers
 {
@@ -10,6 +11,7 @@ namespace PathfindingDedicatedServer.Src.Handlers
       C_SetMonsters packet = Deserialize<C_SetMonsters>(bytes);
       // TODO: call NavManager instance's SetMonsters()
 
+      Session.GetSession(id).GetNavManager().SetMonsters(packet.Monsters);
     }
   }
 }
