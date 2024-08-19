@@ -1,4 +1,4 @@
-﻿using PathfindingDedicatedServer.Src.Nav.Crowds;
+﻿using PathfindingDedicatedServer.Nav.Crowds;
 using System.Net.Sockets;
 
 namespace PathfindingDedicatedServer.Src.Sessions
