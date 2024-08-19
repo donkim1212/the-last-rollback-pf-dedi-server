@@ -19,7 +19,6 @@
 	
     <Compile Include="./Src/Libs/**/*.cs">
       <NoWarn>$(NoWarn);</NoWarn>
-      <!-- Example warnings to disable -->
     </Compile>
   </ItemGroup>
 </Project>
