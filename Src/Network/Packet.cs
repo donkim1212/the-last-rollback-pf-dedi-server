@@ -52,21 +52,21 @@ public class C_CreateSession
 public class C_SetPlayers
 {
   [ProtoMember(1)] // accountId : charClass
-  public Dictionary<string, uint> players { get; set; }
+  public Dictionary<string, uint> Players { get; set; }
 }
 
 [ProtoContract]
 public class C_SetMonsters
 {
   [ProtoMember(1)] // monsterIdx : monsterModel
-  public Dictionary<uint, uint> monsters { get; set; }
+  public Dictionary<uint, uint> Monsters { get; set; }
 }
 
 [ProtoContract]
 public class C_SetPlayerDest
 {
   [ProtoMember(1)]
-  public string accountId { get; set; }
+  public string AccountId { get; set; }
   [ProtoMember(2)]
   public WorldPosition? Pos { get; set; }
 }
