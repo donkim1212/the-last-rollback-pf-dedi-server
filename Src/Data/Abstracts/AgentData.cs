@@ -14,10 +14,7 @@
     public int QueryFilterType { get; set; }
   }
 
-  public class AgentData<T> where T : AgentInfo
+  public class AgentData<T> : JsonData<T> where T : AgentInfo
   {
-    public string Name { get; set; }
-    public string Version { get; set; }
-    public virtual List<T> Data { get; set; }
   }
 }
