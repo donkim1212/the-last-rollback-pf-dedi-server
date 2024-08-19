@@ -1,6 +1,6 @@
 using PathfindingDedicatedServer.Src.Constants;
-using PathfindingDedicatedServer.Src.Nav;
-using PathfindingDedicatedServer.Src.Nav.Crowds;
+using PathfindingDedicatedServer.Nav;
+using PathfindingDedicatedServer.Nav.Crowds;
 using PathfindingDedicatedServer.Src.Network;
 using PathfindingDedicatedServer.Src.Utils;
 using PathfindingDedicatedServer.Src.Utils.FileLoader;

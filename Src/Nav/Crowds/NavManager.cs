@@ -2,7 +2,7 @@
 using DotRecast.Detour;
 using DotRecast.Detour.Crowd;
 
-namespace PathfindingDedicatedServer.Src.Nav.Crowds
+namespace PathfindingDedicatedServer.Nav.Crowds
 {
   public enum NavManagerState
   {

@@ -5,9 +5,9 @@ using DotRecast.Detour;
 using DotRecast.Detour.Io;
 using DotRecast.Recast;
 using PathfindingDedicatedServer.Src.Constants;
-using PathfindingDedicatedServer.Src.Nav.Config;
+using PathfindingDedicatedServer.Nav.Config;
 
-namespace PathfindingDedicatedServer.Src.Nav;
+namespace PathfindingDedicatedServer.Nav;
 public class NavMeshLoader
 {
   /// <summary>

@@ -1,7 +1,7 @@
 ﻿using DotRecast.Core.Numerics;
 using PathfindingDedicatedServer.Src.Constants;
 
-namespace PathfindingDedicatedServer.Src.Nav;
+namespace PathfindingDedicatedServer.Nav;
 public class SpawnerManager
 {
   private static readonly Dictionary<int, List<RcVec3f>> _dungeonSpawners = new Dictionary<int, List<RcVec3f>>();
