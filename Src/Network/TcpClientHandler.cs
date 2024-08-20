@@ -1,5 +1,8 @@
+using System.Buffers;
 using System.Net;
 using System.Net.Sockets;
+using System.Reflection.PortableExecutable;
+using static Packet;
 
 namespace PathfindingDedicatedServer.Src.Network;
 public class TcpClientHandler
@@ -19,7 +22,7 @@ public class TcpClientHandler
     _stream = _tcpClient.GetStream();
   }
 
-  public static TcpClientHandler? GetTcpClientHandler (Guid id)
+  public static TcpClientHandler? GetTcpClientHandler(Guid id)
   {
     if (_connections.TryGetValue(id, out var client)) {
       return client;
@@ -81,6 +84,35 @@ public class TcpClientHandler
 
     byte[] response = Encoding.UTF8.GetBytes("Hello from TCP server!");
     _stream.WriteAsync(response, 0, response.Length);*/
+  }
+
+  public void SendPacket<T>(PacketType packetType, T data)
+  {
+    var arrayBufferWriter = new ArrayBufferWriter<byte>();
+    Packet.Serialize(arrayBufferWriter, data);
+    byte[] buffer = arrayBufferWriter.WrittenSpan.ToArray();
+
+    byte[] header = CreatePacketHeader(buffer.Length, packetType);
+
+    byte[] packet = new byte[header.Length + buffer.Length];
+    Array.Copy(header, 0, packet, 0, header.Length);
+    Array.Copy(buffer, 0, packet, header.Length, buffer.Length);
+
+    _tcpClient.GetStream().Write(packet, 0, packet.Length);
+  }
+
+  private static byte[] CreatePacketHeader(int dataLength, PacketType packetType)
+  {
+    int packetLength = 4 + 1 + dataLength;
+    byte[] header = new byte[5];
+
+    byte[] lengthBytes = BitConverter.GetBytes(packetLength);
+    lengthBytes = ToBigEndian(lengthBytes);
+    Array.Copy(lengthBytes, 0, header, 0, 4);
+
+    header[4] = (byte)packetType;
+
+    return header;
   }
 
   public static byte[] ToBigEndian(byte[] bytes)
