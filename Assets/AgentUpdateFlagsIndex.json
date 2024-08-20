@@ -1,0 +1,16 @@
+{
+  "name": "agent_update_flags_index",
+  "version": "1.0.0",
+  "data": [
+    {"name": "DEFAULT", "flags": 31},
+    {"name": "STRATEGIC_AVOIDER", "flags": 18},
+    {"name": "PLAN_AHEAD", "flags": 27},
+    {"name": "DUMB_CHARGER", "flags": 8},
+    {"name": "CHARGER", "flags": 7},
+    {"name": "CAUTIOUS_NAVIGATOR", "flags": 3},
+    {"name": "VISIONARY_PATHFINDER", "flags": 9},
+    {"name": "EFFICIENT_MOVER", "flags": 26},
+    {"name": "REACTIVE_RUNNER", "flags": 6}
+  ]
+}
+

@@ -27,6 +27,8 @@ namespace PathfindingDedicatedServer.Src.Data
     public static MonsterAgentData? MonsterAgentData { get; set; }
     public static PlayerAgentData? PlayerAgentData { get; set; }
     public static DungeonData? DungeonData { get; set; }
+    public static AgentUpdateFlagsData? AgentUpdateFlagsData { get; set; }
+
     private static readonly Dictionary<uint, List<RcVec3f>> _monsterSpawnPosList = [];
     private static readonly Dictionary<uint, List<RcVec3f>> _playerSpawnPosList = [];
     private static readonly Dictionary<uint, List<RcVec3f>> _baseSpawnPosList = [];

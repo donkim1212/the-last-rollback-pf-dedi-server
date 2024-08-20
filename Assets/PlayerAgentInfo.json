@@ -16,7 +16,7 @@
       "queryFilterType": 0
     },
     {
-      "monsterModel": 1002,
+      "charClass": 1002,
       "radius": 3.0,
       "height": 1.5,
       "maxAcc": 100.0,
@@ -29,7 +29,7 @@
       "queryFilterType": 0
     },
     {
-      "monsterModel": 1003,
+      "charClass": 1003,
       "radius": 3.0,
       "height": 1.5,
       "maxAcc": 100.0,
@@ -42,7 +42,7 @@
       "queryFilterType": 0
     },
     {
-      "monsterModel": 1004,
+      "charClass": 1004,
       "radius": 3.0,
       "height": 1.5,
       "maxAcc": 100.0,
@@ -55,7 +55,7 @@
       "queryFilterType": 0
     },
     {
-      "monsterModel": 1005,
+      "charClass": 1005,
       "radius": 3.0,
       "height": 1.5,
       "maxAcc": 100.0,

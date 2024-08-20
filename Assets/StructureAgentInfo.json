@@ -1,0 +1,12 @@
+﻿{
+  "name": "structure_agent_info",
+  "version": "1.0.0",
+  "data": [
+    { "structureModel": 0, "radius": 3.0, "height": 1.5, "maxAcc": 0, "maxSpd": 0, "collisionQueryRange": 0, "pathOptRange": 0, "separationWeight": 0, "updateFlags": 1, "obsAvoidanceType": 0, "queryFilterType": 0},
+    { "structureModel": 1, "radius": 3.0, "height": 1.5, "maxAcc": 0, "maxSpd": 0, "collisionQueryRange": 0, "pathOptRange": 0, "separationWeight": 0, "updateFlags": 1, "obsAvoidanceType": 0, "queryFilterType": 0},
+    { "structureModel": 2, "radius": 3.0, "height": 1.5, "maxAcc": 0, "maxSpd": 0, "collisionQueryRange": 0, "pathOptRange": 0, "separationWeight": 0, "updateFlags": 1, "obsAvoidanceType": 0, "queryFilterType": 0},
+    { "structureModel": 3, "radius": 3.0, "height": 1.5, "maxAcc": 0, "maxSpd": 0, "collisionQueryRange": 0, "pathOptRange": 0, "separationWeight": 0, "updateFlags": 1, "obsAvoidanceType": 0, "queryFilterType": 0},
+    { "structureModel": 4, "radius": 3.0, "height": 1.5, "maxAcc": 0, "maxSpd": 0, "collisionQueryRange": 0, "pathOptRange": 0, "separationWeight": 0, "updateFlags": 1, "obsAvoidanceType": 0, "queryFilterType": 0},
+    { "structureModel": 5, "radius": 3.0, "height": 1.5, "maxAcc": 0, "maxSpd": 0, "collisionQueryRange": 0, "pathOptRange": 0, "separationWeight": 0, "updateFlags": 1, "obsAvoidanceType": 0, "queryFilterType": 0},
+  ]
+}
