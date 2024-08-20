@@ -1,6 +1,7 @@
 ﻿using ProtoBuf;
 using System.Buffers;
 
+#pragma warning disable IDE1006, CA1050
 public class Packet
 {
   public enum PacketType
@@ -49,6 +50,13 @@ public class C_CreateSession
 }
 
 [ProtoContract]
+public class C_StartSession
+{
+  [ProtoMember(1)]
+  public long Timestamp { get; set; }
+}
+
+[ProtoContract]
 public class C_SetPlayers
 {
   [ProtoMember(1)] // accountId : charClass
@@ -83,6 +91,13 @@ public class C_SetMonsterDest
 // ----- OUT -----
 
 [ProtoContract]
+public class S_CreateSession
+{
+  [ProtoMember(1)]
+  public long Timestamp { get; set; }
+}
+
+[ProtoContract]
 public class S_PlayersLocationUpdate
 {
   [ProtoMember(1)] // accountId : Vector3 (X,Y,Z)
@@ -94,6 +109,17 @@ public class S_MonstersLocationUpdate
 {
   [ProtoMember(1)] // monsterIdx : Vector3 (X,Y,Z)
   public Dictionary<uint, WorldPosition> Positions { get; set; }
+}
+
+[ProtoContract]
+public class S_MonsterAttack
+{
+  [ProtoMember(1)]
+  public uint MonsterIdx { get; set; }
+  [ProtoMember(2)]
+  public Target? Target { get; set; }
+  [ProtoMember(3)]
+  public float Rotation { get; set; }
 }
 
 // // ----- ETC -----
