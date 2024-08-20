@@ -4,7 +4,7 @@ using DotRecast.Core.Numerics;
 using DotRecast.Recast;
 using DotRecast.Recast.Geom;
 
-namespace PathfindingDedicatedServer.Src.Nav
+namespace PathfindingDedicatedServer.Nav
 {
   public class InputGeomProvider : IInputGeomProvider
   {

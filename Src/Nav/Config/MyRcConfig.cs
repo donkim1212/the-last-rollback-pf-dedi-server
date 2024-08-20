@@ -1,6 +1,6 @@
 ﻿using DotRecast.Recast;
 
-namespace PathfindingDedicatedServer.Src.Nav.Config
+namespace PathfindingDedicatedServer.Nav.Config
 {
     public class MyRcConfig
     {

@@ -1,29 +1,51 @@
-using System;
+using PathfindingDedicatedServer.Src.Constants;
+using PathfindingDedicatedServer.Nav;
+using PathfindingDedicatedServer.Nav.Crowds;
+using PathfindingDedicatedServer.Src.Network;
+using PathfindingDedicatedServer.Src.Utils;
+using PathfindingDedicatedServer.Src.Utils.FileLoader;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
-using System.Threading;
-using DotRecast.Recast;
-using DotRecast.Detour;
-using PathfindingDedicatedServer.Src.Constants;
-using PathfindingDedicatedServer.Src.Nav;
+using PathfindingDedicatedServer.Src.Data;
 
 namespace PathfindingDedicatedServer;
 public class Program
 {
   public static void Main()
   {
-    // Load all NavMeshes
-    NavMeshLoader.LoadAllNavMeshAssets();
+    Init();
 
-    //InputGeomProvider? geom = NavMeshLoader.LoadInputMesh(NavMeshConstants.DUNGEON_01_OBJ_FILENAME);
-    //if (geom != null)
-    //{
-    //    Console.WriteLine("verts:" + geom.GetMesh().GetVerts());
-    //}
+    NavManager cm = new (1);
+    cm.Start();
+    cm.AddMonster(1);
+    cm.AddMonster(2);
+    Console.WriteLine("pos: " + cm.GetMonsterPos(1));
+    Console.WriteLine("pos: " + cm.GetMonsterPos(2));
+
+    SchedulerUtils.SetIntervalAction(1000, () =>
+    {
+      Console.WriteLine($"[ 1 ] pos: " + cm.GetMonsterPos(1));
+      Console.WriteLine($"[ 2 ] pos: " + cm.GetMonsterPos(2));
+    });
 
     // Start the TCP server
     StartTcpServer();
+  }
+
+  private static void Init()
+  {
+    Console.WriteLine("----- INIT START -----");
+    DateTime startTime = DateTime.UtcNow;
+    // Load all NavMeshes
+    NavMeshLoader.LoadAllNavMeshAssets();
+
+    // Initialize Storage
+    Storage.InitStorage();
+
+    DateTime endTime = DateTime.UtcNow;
+    Console.WriteLine();
+    Console.WriteLine($"Elapsed time: {(endTime - startTime).TotalSeconds}s");
+    Console.WriteLine("----- INIT END -----");
   }
 
   private static void StartTcpServer()
@@ -65,7 +87,7 @@ public class Program
         return;
       }
 
-      TcpClientHandler.TcpClientHandler handler = new (tcpClient);
+      TcpClientHandler handler = new (tcpClient);
 
       handler.OnDataReceived += (data) =>
       {

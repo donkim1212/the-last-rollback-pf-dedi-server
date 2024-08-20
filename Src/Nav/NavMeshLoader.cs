@@ -5,9 +5,9 @@ using DotRecast.Detour;
 using DotRecast.Detour.Io;
 using DotRecast.Recast;
 using PathfindingDedicatedServer.Src.Constants;
-using PathfindingDedicatedServer.Src.Nav.Config;
+using PathfindingDedicatedServer.Nav.Config;
 
-namespace PathfindingDedicatedServer.Src.Nav;
+namespace PathfindingDedicatedServer.Nav;
 public class NavMeshLoader
 {
   /// <summary>
@@ -18,14 +18,14 @@ public class NavMeshLoader
     try
     {
       // TODO: map the indices somehow
-      int index = 1;
+      uint index = 1;
       string[] files = Directory.GetFiles(PathConstants.ASSETS_REL_PATH, PathConstants.NAVMESH_EXT, SearchOption.AllDirectories);
       foreach (string file in files)
       {
         DtNavMesh? navMesh = LoadNavMesh(file);
         if (navMesh != null)
         {
-          NavMeshes.AddNavMesh(index, navMesh);
+          NavMeshManager.AddNavMesh(index, navMesh);
           Console.WriteLine($"Loaded file: {file}");
           float[] verts = navMesh.GetTile(1).data.verts;
           // Testing
