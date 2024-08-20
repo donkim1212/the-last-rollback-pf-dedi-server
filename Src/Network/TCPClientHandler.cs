@@ -4,10 +4,11 @@ using System.Net.Sockets;
 namespace PathfindingDedicatedServer.Src.Network;
 public class TcpClientHandler
 {
+  private static readonly Dictionary<Guid, TcpClientHandler> _connections = [];
   private readonly Guid _id;
   private readonly TcpClient _tcpClient;
   private readonly NetworkStream _stream;
-  private List<byte> incompleteData = new List<byte>();
+  private readonly List<byte> incompleteData = [];
 
   public event Action<string>? OnDataReceived;
 
@@ -16,6 +17,14 @@ public class TcpClientHandler
     _id = Guid.NewGuid();
     _tcpClient = tcpClient;
     _stream = _tcpClient.GetStream();
+  }
+
+  public static TcpClientHandler? GetTcpClientHandler (Guid id)
+  {
+    if (_connections.TryGetValue(id, out var client)) {
+      return client;
+    }
+    return null;
   }
 
   public async Task StartHandlingClientAsync()
@@ -43,6 +52,7 @@ public class TcpClientHandler
       IPEndPoint? endPoint = _tcpClient.GetStream().Socket.RemoteEndPoint as IPEndPoint;
       Console.WriteLine($"[{endPoint?.Address}:{endPoint?.Port}] TcpClient closed.");
       _tcpClient.Close();
+      _connections.Remove(_id);
     }
   }
 
