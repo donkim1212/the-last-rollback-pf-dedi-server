@@ -15,18 +15,18 @@ public class Program
   {
     Init();
 
-    NavManager cm = new (1);
-    cm.Start();
-    cm.AddMonster(1);
-    cm.AddMonster(2);
-    Console.WriteLine("pos: " + cm.GetMonsterPos(1));
-    Console.WriteLine("pos: " + cm.GetMonsterPos(2));
+    //NavManager cm = new (1);
+    //cm.Start();
+    //cm.AddMonster(1);
+    //cm.AddMonster(2);
+    //Console.WriteLine("pos: " + cm.GetMonsterPos(1));
+    //Console.WriteLine("pos: " + cm.GetMonsterPos(2));
 
-    SchedulerUtils.SetIntervalAction(1000, () =>
-    {
-      Console.WriteLine($"[ 1 ] pos: " + cm.GetMonsterPos(1));
-      Console.WriteLine($"[ 2 ] pos: " + cm.GetMonsterPos(2));
-    });
+    //SchedulerUtils.SetIntervalAction(1000, () =>
+    //{
+    //  Console.WriteLine($"[ 1 ] pos: " + cm.GetMonsterPos(1));
+    //  Console.WriteLine($"[ 2 ] pos: " + cm.GetMonsterPos(2));
+    //});
 
     // Start the TCP server
     StartTcpServer();
