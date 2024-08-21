@@ -7,6 +7,6 @@
     { "structureModel": 2, "radius": 3.0, "height": 1.5, "maxAcc": 0, "maxSpd": 0, "collisionQueryRange": 0, "pathOptRange": 0, "separationWeight": 0, "updateFlags": 1, "obsAvoidanceType": 0, "queryFilterType": 0},
     { "structureModel": 3, "radius": 3.0, "height": 1.5, "maxAcc": 0, "maxSpd": 0, "collisionQueryRange": 0, "pathOptRange": 0, "separationWeight": 0, "updateFlags": 1, "obsAvoidanceType": 0, "queryFilterType": 0},
     { "structureModel": 4, "radius": 3.0, "height": 1.5, "maxAcc": 0, "maxSpd": 0, "collisionQueryRange": 0, "pathOptRange": 0, "separationWeight": 0, "updateFlags": 1, "obsAvoidanceType": 0, "queryFilterType": 0},
-    { "structureModel": 5, "radius": 3.0, "height": 1.5, "maxAcc": 0, "maxSpd": 0, "collisionQueryRange": 0, "pathOptRange": 0, "separationWeight": 0, "updateFlags": 1, "obsAvoidanceType": 0, "queryFilterType": 0},
+    { "structureModel": 5, "radius": 3.0, "height": 1.5, "maxAcc": 0, "maxSpd": 0, "collisionQueryRange": 0, "pathOptRange": 0, "separationWeight": 0, "updateFlags": 1, "obsAvoidanceType": 0, "queryFilterType": 0}
   ]
 }
