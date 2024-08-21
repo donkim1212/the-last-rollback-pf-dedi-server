@@ -8,6 +8,8 @@ public class Packet
   {
     None = 0,
 
+    C_NightRoundStart = 5,
+
     C_CreateSession = 10,
     
     C_SetPlayers = 11,
@@ -88,6 +90,13 @@ public class C_SetMonsterDest
   public uint MonsterIdx { get; set; }
   [ProtoMember(2)]
   public Target? Target { get; set; }
+}
+
+[ProtoContract]
+public class C_NightRoundStart
+{
+  [ProtoMember(1)]
+  public ulong Timestamp { get; set; }
 }
 
 // ----- OUT -----
