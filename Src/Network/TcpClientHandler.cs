@@ -20,6 +20,12 @@ public class TcpClientHandler
     _id = Guid.NewGuid();
     _tcpClient = tcpClient;
     _stream = _tcpClient.GetStream();
+    AddTcpClientHandler(_id, this);
+  }
+
+  public static bool AddTcpClientHandler(Guid id, TcpClientHandler handler)
+  {
+    return _connections.TryAdd(id, handler);
   }
 
   public static TcpClientHandler? GetTcpClientHandler(Guid id)
