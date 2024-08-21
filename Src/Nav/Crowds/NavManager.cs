@@ -310,9 +310,13 @@ namespace PathfindingDedicatedServer.Nav.Crowds
       return _crowd.GetAgent(_playerAgents[accountId]);
     }
 
-    public DtCrowdAgent GetStructureAgent(int structureIdx)
+    public DtCrowdAgent? GetStructureAgent(int structureIdx)
     {
-      return _crowd.GetAgent(_structureAgents[structureIdx]);
+      if (_structureAgents.TryGetValue(structureIdx, out var value))
+      {
+        return _crowd.GetAgent(value);
+      }
+      return null;
     }
 
     public void RemoveMonster(uint monsterIdx)
