@@ -66,11 +66,15 @@ public class Program
         Console.WriteLine("Client connected.");
 
         // Handle the client connection in a separate thread
-        Thread clientThread = new(start: HandleClient)
+        //Thread clientThread = new(start: HandleClient)
+        //{
+        //  IsBackground = true
+        //};
+        //clientThread.Start(tcpClient);
+        _ = Task.Run(async () =>
         {
-          IsBackground = true
-        };
-        clientThread.Start(tcpClient);
+          await HandleClient(tcpClient);
+        });
       }
       catch (Exception ex)
       {
@@ -79,7 +83,7 @@ public class Program
     }
   }
 
-  private static async void HandleClient(object? obj)
+  private static async Task HandleClient(object? obj)
   {
     try
     {
@@ -88,7 +92,7 @@ public class Program
         return;
       }
 
-      TcpClientHandler handler = new (tcpClient);
+      TcpClientHandler handler = new(tcpClient);
 
       handler.OnDataReceived += (data) =>
       {
@@ -103,4 +107,29 @@ public class Program
     }
 
   }
+
+  //private static async void HandleClient(object? obj)
+  //{
+  //  try
+  //  {
+  //    if (obj is not TcpClient tcpClient)
+  //    {
+  //      return;
+  //    }
+
+  //    TcpClientHandler handler = new (tcpClient);
+
+  //    handler.OnDataReceived += (data) =>
+  //    {
+  //      Console.WriteLine($"Received: {data}");
+  //    };
+
+  //    await handler.StartHandlingClientAsync();
+  //  }
+  //  catch (Exception e)
+  //  {
+  //    Console.WriteLine("HandleClient Error:" + e.Message);
+  //  }
+
+  //}
 }

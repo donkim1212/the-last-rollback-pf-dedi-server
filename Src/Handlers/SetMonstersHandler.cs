@@ -8,6 +8,7 @@ namespace PathfindingDedicatedServer.Src.Handlers
   {
     public override void HandlePacket(NetworkStream stream, Guid id, byte[] bytes)
     {
+      Console.WriteLine("SetMonstersHandler called.");
       C_SetMonsters packet = Deserialize<C_SetMonsters>(bytes);
       // TODO: call NavManager instance's SetMonsters()
 
