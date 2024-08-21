@@ -11,6 +11,11 @@ namespace PathfindingDedicatedServer.Src.Handlers
       C_SetMonsters packet = Deserialize<C_SetMonsters>(bytes);
       // TODO: call NavManager instance's SetMonsters()
 
+      foreach (uint monsterIdx in packet.Monsters.Keys)
+      {
+        Console.WriteLine($"monsterIdx {} : {packet.Monsters[monsterIdx]}");
+      }
+
       Session.GetSession(id).GetNavManager().SetMonsters(packet.Monsters);
     }
   }
