@@ -60,14 +60,16 @@ public class C_StartSession
 public class C_SetPlayers
 {
   [ProtoMember(1)] // accountId : charClass
-  public Dictionary<string, uint> Players { get; set; } = [];
+  public List<Player> Players { get; set; } = [];
+  //public Dictionary<string, uint> Players { get; set; } = [];
 }
 
 [ProtoContract]
 public class C_SetMonsters
 {
   [ProtoMember(1)] // monsterIdx : monsterModel
-  public Dictionary<uint, uint> Monsters { get; set; } = [];
+  public List<Monster> Monsters { get; set; } = [];
+  //public MapField<uint, uint> Monsters { get; set; } = [];
 }
 
 [ProtoContract]
@@ -133,6 +135,24 @@ public class WorldPosition
   public float Y { get; set; }
   [ProtoMember(3)]
   public float Z { get; set; }
+}
+
+[ProtoContract]
+public class Player
+{
+  [ProtoMember(1)]
+  public string AccountId { get; set; }
+  [ProtoMember(2)]
+  public uint CharClass { get; set; }
+}
+
+[ProtoContract]
+public class Monster
+{
+  [ProtoMember(1)]
+  public uint MonsterIdx { get; set; }
+  [ProtoMember(2)]
+  public uint MonsterModel { get; set; }
 }
 
 [ProtoContract]

@@ -11,13 +11,15 @@ namespace PathfindingDedicatedServer.Src.Handlers
     {
       C_SetPlayers packet = Deserialize<C_SetPlayers>(bytes);
 
+      Dictionary<string, uint> players = [];
       foreach (var player in packet.Players)
       {
-        Console.WriteLine($"accountId {player.Key} : charClass {player.Value}");
+        if (players.TryAdd(player.AccountId, player.CharClass))
+          Console.WriteLine($"accountId {player.AccountId} : charClass {player.CharClass}");
       }
 
       // TODO: Set players list to the NavManager in the session
-      Session.GetSession(id).GetNavManager().SetPlayers(packet.Players);
+      Session.GetSession(id).GetNavManager().SetPlayers(players);
     }
   }
 }
