@@ -16,7 +16,7 @@ namespace PathfindingDedicatedServer.Src.Handlers
       foreach (var monster in packet.Monsters)
       {
         if (monsters.TryAdd(monster.MonsterIdx, monster.MonsterModel))
-          Console.WriteLine($"accountId {monster.MonsterIdx} : charClass {monster.MonsterModel}");
+          Console.WriteLine($"monsterIdx {monster.MonsterIdx} : monsterModel {monster.MonsterModel}");
       }
 
       Session.GetSession(id).GetNavManager().SetMonsters(monsters);

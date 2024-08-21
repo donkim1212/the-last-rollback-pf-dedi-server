@@ -39,6 +39,7 @@ namespace PathfindingDedicatedServer.Src.Sessions
       _navManager = new NavManager(dungeonCode);
       _gameLoop = StartGameLoop;
       _id = id;
+      Start();
     }
 
     public void Start()
