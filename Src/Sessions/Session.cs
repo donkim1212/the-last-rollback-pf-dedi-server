@@ -1,4 +1,5 @@
 ﻿using PathfindingDedicatedServer.Nav.Crowds;
+using PathfindingDedicatedServer.Src.Constants;
 using PathfindingDedicatedServer.Src.Network;
 using System.Net.Sockets;
 using static Packet;
@@ -101,6 +102,28 @@ namespace PathfindingDedicatedServer.Src.Sessions
         RemoveSession(_id); // both gets GC'd (hopefully)
       }
       
+    }
+
+    public async void StartSpawning (ulong timestamp)
+    {
+      NavManager nav = GetNavManager();
+      uint[] arr = [.. nav.GetMonsterIndices()];
+      foreach (uint monsterIdx in arr)
+      {
+        try
+        {
+          nav.AddMonster(monsterIdx);
+          await Task.Delay(1500);
+        } catch (Exception e)
+        {
+          Console.WriteLine($"Failed spawning monster with idx {monsterIdx}");
+          if (LoggerConstants.VERBOSE)
+          {
+            Console.WriteLine(e);
+          }
+        }
+      }
+      Console.WriteLine($"Done spawning {arr.Length} monsters");
     }
 
     public NavManager GetNavManager()

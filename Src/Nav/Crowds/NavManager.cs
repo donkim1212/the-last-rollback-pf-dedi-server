@@ -4,7 +4,9 @@ using DotRecast.Detour;
 using DotRecast.Detour.Crowd;
 using PathfindingDedicatedServer.Src.Constants;
 using PathfindingDedicatedServer.Src.Data;
+using PathfindingDedicatedServer.Src.Monsters;
 using PathfindingDedicatedServer.Src.Utils;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Reflection;
 
@@ -42,6 +44,11 @@ namespace PathfindingDedicatedServer.Nav.Crowds
     private DateTime _prevTime;
     private DateTime _curTime;
 
+    private RcVec3f _basePos;
+    private long _baseRef;
+    private int _baseIdx;
+    private float _baseRad;
+
     public NavManager(uint dungeonCode) : this(dungeonCode, new DtCrowdConfig(0.6f), NavMeshManager.GetNavMesh(dungeonCode))
     {
     }
@@ -52,6 +59,15 @@ namespace PathfindingDedicatedServer.Nav.Crowds
       _dungeonCode = dungeonCode;
       _crowd = new(config, navMesh);
       _state = NavManagerState.WAITING;
+      DtNavMeshQueryResult result = GetNavMeshQueryResult(
+        Storage.GetPos(_dungeonCode, PosType.BASE_SPAWNER, 0),
+        3f, 
+        2f
+      );
+      _baseRef = result.NearestRef;
+      _basePos = result.NearestPt;
+      _baseIdx = -1; // temp
+      _baseRad = Storage.GetStructureAgentInfo(0).radius;
     }
 
     public void Start()
@@ -279,8 +295,9 @@ namespace PathfindingDedicatedServer.Nav.Crowds
 
     public void AddMonster(uint monsterIdx)
     {
-      DtCrowdAgentParams option = Storage.GetDefaultAgentInfo();
-      AddMonster(monsterIdx, option);
+      _monsterOptions.TryGetValue(monsterIdx, out var value);
+      if (value == null) return;
+      AddMonster(monsterIdx, value);
     }
 
     public DtCrowdAgent GetMonsterAgent (uint monsterIdx)
@@ -333,6 +350,11 @@ namespace PathfindingDedicatedServer.Nav.Crowds
       }
     }
 
+    public Dictionary<uint, DtCrowdAgentParams>.KeyCollection GetMonsterIndices ()
+    {
+      return _monsterOptions.Keys;
+    }
+
     public void SetPlayers(Dictionary<string, uint> players)
     {
       foreach (string accountId in players.Keys)
@@ -367,14 +389,41 @@ namespace PathfindingDedicatedServer.Nav.Crowds
       _structureAgents.Add(structureIdx, _crowd.AddAgent(pos, option).idx);
     }
 
+    public void MonsterChaseTarget(uint monsterIdx)
+    {
+      DtCrowdAgent agent = GetMonsterAgent(monsterIdx);
+      if (agent.option.userData is AgentAdditionalData data)
+      {
+        int targetAgentIdx = data.targetAgentIdx;
+        if (targetAgentIdx < 0)
+        {
+          data.targetActualDistance = Utils.CalcActualDistance(
+            agent.npos,
+            agent.option.radius,
+            _basePos,
+            _baseRad
+          );
+          MoveToBase(agent);
+          return;
+        }
+        var targetAgent = _crowd.GetAgent(targetAgentIdx);
+        MoveTo(agent, targetAgent.npos);
+      }
+      
+    }
+
     public void SetMonsterDest(uint monsterIdx, TargetStructure target)
     {
-      MoveTo(GetMonsterAgent(monsterIdx), GetStructurePos(target.StructureIdx));
+      if (GetMonsterAgent(monsterIdx).option.userData is not AgentAdditionalData data) return;
+      data.targetAgentIdx = GetStructureAgent(target.StructureIdx).idx;
+      //MoveTo(GetMonsterAgent(monsterIdx), GetStructurePos(target.StructureIdx));
     }
 
     public void SetMonsterDest(uint monsterIdx, TargetPlayer target)
     {
-      MoveTo(GetMonsterAgent(monsterIdx), GetPlayerPos(target.AccountId));
+      if (GetMonsterAgent(monsterIdx).option.userData is not AgentAdditionalData data) return;
+      data.targetAgentIdx = GetPlayerAgent(target.AccountId).idx;
+      //MoveTo(GetMonsterAgent(monsterIdx), GetPlayerPos(target.AccountId));
     }
 
     public void SetPlayerDest(string accountId, RcVec3f? pos)
@@ -385,7 +434,7 @@ namespace PathfindingDedicatedServer.Nav.Crowds
 
     public void MoveTo (DtCrowdAgent agent, RcVec3f? pos)
     {
-      if (pos == null)
+      if (pos == null || pos == agent.npos)
       {
         Halt(agent);
         return;
@@ -430,6 +479,10 @@ namespace PathfindingDedicatedServer.Nav.Crowds
 
     public void Halt(DtCrowdAgent agent)
     {
+      if (agent.option.userData is AgentAdditionalData data)
+      {
+        data.targetAgentIdx = agent.idx;
+      }
       _crowd.ResetMoveTarget(agent);
     }
 
@@ -442,5 +495,6 @@ namespace PathfindingDedicatedServer.Nav.Crowds
     {
       Halt(GetMonsterAgent(monsterIdx));
     }
+
   }
 }
