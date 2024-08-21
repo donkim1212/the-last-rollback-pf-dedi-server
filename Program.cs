@@ -52,9 +52,10 @@ public class Program
   {
     // Set up the TCP listener on port 5000
     IPAddress localhost = IPAddress.Parse("127.0.0.1");
-    TcpListener tcpListener = new(localhost, 5000);
+    int port = 5507;
+    TcpListener tcpListener = new(localhost, port);
     tcpListener.Start();
-    Console.WriteLine("TCP Server started on port 5000.");
+    Console.WriteLine($"TCP Server started on port {port}");
 
     while (true)
     {

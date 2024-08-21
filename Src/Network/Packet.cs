@@ -90,12 +90,12 @@ public class C_SetMonsterDest
 
 // ----- OUT -----
 
-[ProtoContract]
-public class S_CreateSession
-{
-  [ProtoMember(1)]
-  public long Timestamp { get; set; }
-}
+//[ProtoContract]
+//public class S_CreateSession
+//{
+//  [ProtoMember(1)]
+//  public long Timestamp { get; set; }
+//}
 
 [ProtoContract]
 public class S_PlayersLocationUpdate
