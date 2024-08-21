@@ -13,7 +13,7 @@ namespace PathfindingDedicatedServer.Src.Handlers
 
       foreach (uint monsterIdx in packet.Monsters.Keys)
       {
-        Console.WriteLine($"monsterIdx {} : {packet.Monsters[monsterIdx]}");
+        Console.WriteLine($"monsterIdx {monsterIdx} : {packet.Monsters[monsterIdx]}");
       }
 
       Session.GetSession(id).GetNavManager().SetMonsters(packet.Monsters);
