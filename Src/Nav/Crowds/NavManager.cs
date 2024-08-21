@@ -38,8 +38,8 @@ namespace PathfindingDedicatedServer.Nav.Crowds
     private readonly Dictionary<uint, DtCrowdAgentParams> _monsterOptions = [];
     private readonly Dictionary<string, int> _playerAgents = []; // accountId, agentIdx
     private readonly Dictionary<string, DtCrowdAgentParams> _playerOptions = [];
-    private readonly Dictionary<uint, int> _structureAgents = []; // structureIdx, agentIdx / won't move
-    private readonly Dictionary<uint, DtCrowdAgentParams> _structureOptions = [];
+    private readonly Dictionary<int, int> _structureAgents = []; // structureIdx, agentIdx / won't move
+    private readonly Dictionary<int, DtCrowdAgentParams> _structureOptions = [];
     private DateTime _startTime;
     private DateTime _prevTime;
     private DateTime _curTime;
@@ -212,7 +212,7 @@ namespace PathfindingDedicatedServer.Nav.Crowds
       }
     }
 
-    public RcVec3f? GetStructurePos(uint structureIdx)
+    public RcVec3f? GetStructurePos(int structureIdx)
     {
       try
       {
@@ -310,7 +310,7 @@ namespace PathfindingDedicatedServer.Nav.Crowds
       return _crowd.GetAgent(_playerAgents[accountId]);
     }
 
-    public DtCrowdAgent GetStructureAgent(uint structureIdx)
+    public DtCrowdAgent GetStructureAgent(int structureIdx)
     {
       return _crowd.GetAgent(_structureAgents[structureIdx]);
     }
@@ -384,45 +384,66 @@ namespace PathfindingDedicatedServer.Nav.Crowds
       _playerAgents.Add(accountId, _crowd.AddAgent(pos, option).idx);
     }
 
-    public void AddStructure(uint structureIdx, RcVec3f pos, DtCrowdAgentParams option)
+    public void AddStructure(int structureIdx, RcVec3f pos, DtCrowdAgentParams option)
     {
       _structureAgents.Add(structureIdx, _crowd.AddAgent(pos, option).idx);
     }
 
-    public void MonsterChaseTarget(uint monsterIdx)
+    public void ReCalc(uint monsterIdx)
     {
+      // Get agent
       DtCrowdAgent agent = GetMonsterAgent(monsterIdx);
+
+      // check current target
+      // - calc dist
+      // - if player, calc path
+      // - else, calc path if prevIdx == curIdx
       if (agent.option.userData is AgentAdditionalData data)
       {
-        int targetAgentIdx = data.targetAgentIdx;
-        if (targetAgentIdx < 0)
-        {
-          data.targetActualDistance = Utils.CalcActualDistance(
-            agent.npos,
-            agent.option.radius,
-            _basePos,
-            _baseRad
-          );
-          MoveToBase(agent);
-          return;
-        }
+        int targetAgentIdx = data.GetTargetAgentIdx();
         var targetAgent = _crowd.GetAgent(targetAgentIdx);
-        MoveTo(agent, targetAgent.npos);
+        
+        data.SetTargetActualDistance(
+          agent.npos,
+          agent.option.radius,
+          targetAgent?.npos ?? _basePos,
+          targetAgent?.option.radius ?? _baseRad
+        );
+
+        //if ()
       }
-      
+    }
+
+    public void ReCalcAll()
+    {
+      foreach (var monster in _monsterAgents)
+      {
+        ReCalc(monster.Key);
+      }
+    }
+
+    public void SetMonsterDest(uint monsterIdx, DtCrowdAgent targetAgent)
+    {
+      DtCrowdAgent agent = GetMonsterAgent(monsterIdx);
+      if (agent.option.userData is not AgentAdditionalData data) return;
+      data.SetTargetAgentIdx(targetAgent.idx);
+      MoveTo(agent, targetAgent.npos);
     }
 
     public void SetMonsterDest(uint monsterIdx, TargetStructure target)
     {
-      if (GetMonsterAgent(monsterIdx).option.userData is not AgentAdditionalData data) return;
-      data.targetAgentIdx = GetStructureAgent(target.StructureIdx).idx;
-      //MoveTo(GetMonsterAgent(monsterIdx), GetStructurePos(target.StructureIdx));
+      SetMonsterDest(monsterIdx, GetStructureAgent(target.StructureIdx));
+      //DtCrowdAgent agent = GetMonsterAgent(monsterIdx);
+      //if (agent.option.userData is not AgentAdditionalData data) return;
+      //data.targetAgentIdx = GetStructureAgent(target.StructureIdx).idx;
+      //MoveTo(agent, GetStructurePos(target.StructureIdx));
     }
 
     public void SetMonsterDest(uint monsterIdx, TargetPlayer target)
     {
-      if (GetMonsterAgent(monsterIdx).option.userData is not AgentAdditionalData data) return;
-      data.targetAgentIdx = GetPlayerAgent(target.AccountId).idx;
+      SetMonsterDest(monsterIdx, GetPlayerAgent(target.AccountId));
+      //if (GetMonsterAgent(monsterIdx).option.userData is not AgentAdditionalData data) return;
+      //data.targetAgentIdx = GetPlayerAgent(target.AccountId).idx;
       //MoveTo(GetMonsterAgent(monsterIdx), GetPlayerPos(target.AccountId));
     }
 
@@ -481,7 +502,7 @@ namespace PathfindingDedicatedServer.Nav.Crowds
     {
       if (agent.option.userData is AgentAdditionalData data)
       {
-        data.targetAgentIdx = agent.idx;
+        data.SetTargetAgentIdx(agent.idx);
       }
       _crowd.ResetMoveTarget(agent);
     }
