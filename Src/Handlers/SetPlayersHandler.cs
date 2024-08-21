@@ -11,6 +11,11 @@ namespace PathfindingDedicatedServer.Src.Handlers
     {
       C_SetPlayers packet = Deserialize<C_SetPlayers>(bytes);
 
+      foreach (var player in packet.Players)
+      {
+        Console.WriteLine($"accountId {player.Key} : charClass {player.Value}");
+      }
+
       // TODO: Set players list to the NavManager in the session
       Session.GetSession(id).GetNavManager().SetPlayers(packet.Players);
     }
