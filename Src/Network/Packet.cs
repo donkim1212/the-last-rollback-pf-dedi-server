@@ -189,7 +189,7 @@ public class TargetPlayer : Target
 public class TargetStructure : Target
 {
   [ProtoMember(1)]
-  public uint StructureIdx { get; set; }
+  public int StructureIdx { get; set; }
 }
 
 //[ProtoContract]
