@@ -4,7 +4,7 @@
   "data": [
     {
       "charClass": 1001,
-      "radius": 3.0,
+      "radius": 0.5,
       "height": 1.5,
       "maxAcc": 100.0,
       "maxSpd": 5.0,
@@ -17,7 +17,7 @@
     },
     {
       "charClass": 1002,
-      "radius": 3.0,
+      "radius": 0.5,
       "height": 1.5,
       "maxAcc": 100.0,
       "maxSpd": 5.3,
@@ -30,7 +30,7 @@
     },
     {
       "charClass": 1003,
-      "radius": 3.0,
+      "radius": 0.5,
       "height": 1.5,
       "maxAcc": 100.0,
       "maxSpd": 4.2,
@@ -43,7 +43,7 @@
     },
     {
       "charClass": 1004,
-      "radius": 3.0,
+      "radius": 0.5,
       "height": 1.5,
       "maxAcc": 100.0,
       "maxSpd": 4.8,
@@ -56,7 +56,7 @@
     },
     {
       "charClass": 1005,
-      "radius": 3.0,
+      "radius": 0.5,
       "height": 1.5,
       "maxAcc": 100.0,
       "maxSpd": 3.8,

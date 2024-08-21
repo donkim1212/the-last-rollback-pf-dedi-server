@@ -5,6 +5,7 @@ using DotRecast.Detour.Crowd;
 using PathfindingDedicatedServer.Src.Constants;
 using PathfindingDedicatedServer.Src.Data;
 using PathfindingDedicatedServer.Src.Utils;
+using System.Diagnostics;
 using System.Reflection;
 
 namespace PathfindingDedicatedServer.Nav.Crowds
@@ -155,6 +156,7 @@ namespace PathfindingDedicatedServer.Nav.Crowds
       foreach (string accountId in _playerAgents.Keys)
       {
         RcVec3f? pos = GetPlayerPos(accountId);
+        //Console.WriteLine($"{accountId} pos: " + pos);
         if (pos == null) continue;
         _plu.Positions[accountId] = Utils.ToWorldPosition(pos.Value);
       }
@@ -377,6 +379,7 @@ namespace PathfindingDedicatedServer.Nav.Crowds
 
     public void SetPlayerDest(string accountId, RcVec3f? pos)
     {
+      //Console.WriteLine($"Player dest set to: {pos.Value.X},{pos.Value.Y},{pos.Value.Z}");
       MoveTo(GetPlayerAgent(accountId), pos);
     }
 

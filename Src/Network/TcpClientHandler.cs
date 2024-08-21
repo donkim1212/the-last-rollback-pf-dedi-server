@@ -93,7 +93,7 @@ public class TcpClientHandler
     _stream.WriteAsync(response, 0, response.Length);*/
   }
 
-  public void SendPacket<T>(PacketType packetType, T data)
+  public async Task SendPacket<T>(PacketType packetType, T data)
   {
     var arrayBufferWriter = new ArrayBufferWriter<byte>();
     Packet.Serialize(arrayBufferWriter, data);
@@ -104,6 +104,9 @@ public class TcpClientHandler
     byte[] packet = new byte[header.Length + buffer.Length];
     Array.Copy(header, 0, packet, 0, header.Length);
     Array.Copy(buffer, 0, packet, header.Length, buffer.Length);
+
+    //Console.WriteLine("??? " + header.Length + "  " + packet.Length);
+    //Console.WriteLine("??? " + header[4]);
 
     _tcpClient.GetStream().Write(packet, 0, packet.Length);
   }

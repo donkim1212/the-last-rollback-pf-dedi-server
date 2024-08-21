@@ -60,12 +60,12 @@ namespace PathfindingDedicatedServer.Src.Sessions
         while (_navManager.GetState() == NavManagerState.RUNNING)
         {
           var deltaTime = _navManager.UpdateImmediately();
-          Console.WriteLine($"deltaTime: {deltaTime}s");
-          clientHandler.SendPacket<S_MonstersLocationUpdate>(
+          //Console.WriteLine($"deltaTime: {deltaTime}s");
+          _ = clientHandler.SendPacket<S_MonstersLocationUpdate>(
             PacketType.S_MonstersLocationUpdate,
             _navManager.GetMonsterLocations()
           );
-          clientHandler.SendPacket<S_PlayersLocationUpdate>(
+          _ = clientHandler.SendPacket<S_PlayersLocationUpdate>(
             PacketType.S_PlayerLocationUpdate,
             _navManager.GetPlayerLocations()
           );
