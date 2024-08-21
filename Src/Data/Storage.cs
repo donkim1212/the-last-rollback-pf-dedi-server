@@ -3,6 +3,7 @@ using DotRecast.Core.Numerics;
 using DotRecast.Detour.Crowd;
 using PathfindingDedicatedServer.Src.Constants;
 using PathfindingDedicatedServer.Src.Data.Abstracts;
+using PathfindingDedicatedServer.Src.Monsters;
 using PathfindingDedicatedServer.Src.Utils.FileLoader;
 using System.Collections.ObjectModel;
 
@@ -26,6 +27,7 @@ namespace PathfindingDedicatedServer.Src.Data
     };
     public static MonsterAgentData? MonsterAgentData { get; set; }
     public static PlayerAgentData? PlayerAgentData { get; set; }
+    public static StructureAgentData? StructureAgentData { get; set; }
     public static DungeonData? DungeonData { get; set; }
     public static AgentUpdateFlagsData? AgentUpdateFlagsData { get; set; }
 
@@ -42,17 +44,22 @@ namespace PathfindingDedicatedServer.Src.Data
       MonsterAgentData = monsterData;
       Console.WriteLine($"Loaded {monsterData.Name}");
       Console.WriteLine($"-- version: {monsterData.Version}");
-      Console.WriteLine($"-- {monsterData.Data.First().MonsterModel}");
+      Console.WriteLine($"-- test: {monsterData.Data.First().MonsterModel}");
       PlayerAgentData playerData = loader.LoadFileFromAssets<PlayerAgentData>("PlayerAgentInfo.json");
       PlayerAgentData = playerData;
       Console.WriteLine($"Loaded {playerData.Name}");
       Console.WriteLine($"-- version: {playerData.Version}");
-      Console.WriteLine($"-- {playerData.Data.First().CharClass}");
+      Console.WriteLine($"-- test: {playerData.Data.First().CharClass}");
+      StructureAgentData structureAgentData = loader.LoadFileFromAssets<StructureAgentData>("StructureAgentInfo.json");
+      StructureAgentData = structureAgentData;
+      Console.WriteLine($"Loaded {structureAgentData.Name}");
+      Console.WriteLine($"-- version: {structureAgentData.Version}");
+      Console.WriteLine($"-- test: {structureAgentData.Data.First().StructureModel}");
       DungeonData dungeonData = loader.LoadFileFromAssets<DungeonData>("DungeonInfo.json");
       DungeonData = dungeonData;
       Console.WriteLine($"Loaded {dungeonData.Name}");
       Console.WriteLine($"-- version: {dungeonData.Version}");
-      Console.WriteLine($"-- {dungeonData.Data.First().X}");
+      Console.WriteLine($"-- test: {dungeonData.Data.First().X}");
       
       InitSpawnPosLists();
       Rand = new Random(ServerConstants.RANDOM_SEED);
@@ -72,6 +79,11 @@ namespace PathfindingDedicatedServer.Src.Data
           new RcVec3f(dungeonInfo.X, dungeonInfo.Y, dungeonInfo.Z)
         );
       }
+    }
+
+    private static void InitAgentInfoDictonaries ()
+    {
+
     }
 
     private static Dictionary<uint, List<RcVec3f>>? GetDictionary(PosType posType)
@@ -122,6 +134,20 @@ namespace PathfindingDedicatedServer.Src.Data
       return ConvertToDtAgentParams(info);
     }
 
+    public static DtCrowdAgentParams GetStructureAgentInfo(uint structureModel)
+    {
+      if (StructureAgentData == null)
+      {
+        throw new InvalidOperationException("GetPlayerAgentInfo Error: StructureAgentData is NULL");
+      }
+      StructureAgentInfo? info = StructureAgentData.Data.Find((data) => data.StructureModel == structureModel);
+      if (info == null)
+      {
+        return _defaultCrowdAgentParams;
+      }
+      return ConvertToDtAgentParams(info);
+    }
+
     private static DtCrowdAgentParams ConvertToDtAgentParams(AgentInfo agentInfo)
     {
       return new()
@@ -136,7 +162,7 @@ namespace PathfindingDedicatedServer.Src.Data
         updateFlags = agentInfo.UpdateFlags, // needs checking
         obstacleAvoidanceType = agentInfo.ObsAvoidanceType,
         queryFilterType = agentInfo.QueryFilterType,
-        userData = new(),
+        userData = new AgentAdditionalData(),
       };
     }
 
