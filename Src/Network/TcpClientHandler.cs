@@ -49,6 +49,7 @@ public class TcpClientHandler
     catch (Exception e)
     {
       Console.WriteLine($"HandleClient Error: {e.Message}");
+      Console.WriteLine($"{e.StackTrace}");
     }
     finally
     {
