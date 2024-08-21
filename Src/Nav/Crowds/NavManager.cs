@@ -422,11 +422,18 @@ namespace PathfindingDedicatedServer.Nav.Crowds
       }
     }
 
-    public void SetMonsterDest(uint monsterIdx, DtCrowdAgent targetAgent)
+    public void SetMonsterDest(uint monsterIdx, DtCrowdAgent? targetAgent)
     {
       DtCrowdAgent agent = GetMonsterAgent(monsterIdx);
-      if (agent.option.userData is not AgentAdditionalData data) return;
-      data.SetTargetAgentIdx(targetAgent.idx);
+      if (agent.option.userData is AgentAdditionalData data)
+      {
+        data.SetTargetAgentIdx(targetAgent?.idx ?? -1);
+      }
+      if (targetAgent == null)
+      {
+        MoveToBase(agent);
+        return;
+      }
       MoveTo(agent, targetAgent.npos);
     }
 
