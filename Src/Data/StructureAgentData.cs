@@ -2,12 +2,12 @@
 
 namespace PathfindingDedicatedServer.Src.Data
 {
-  public class StructureInfo : AgentInfo
+  public class StructureAgentInfo : AgentInfo
   {
     public uint StructureModel { get; set; }
   }
 
-  public class StructureAgentData : AgentData<StructureInfo>
+  public class StructureAgentData : AgentData<StructureAgentInfo>
   {
   }
 }
