@@ -26,7 +26,7 @@ namespace PathfindingDedicatedServer.Nav.Crowds
     private readonly DtCrowd _crowd;
     private readonly uint _dungeonCode;
     private NavManagerState _state = NavManagerState.NONE;
-    private readonly int _tickRate = 500; // ms
+    private readonly int _tickRate = 20; // ms
 
     private readonly S_PlayersLocationUpdate _plu = new() { Positions = [] };
     private readonly S_MonstersLocationUpdate _mlu = new() { Positions = [] };
@@ -136,8 +136,6 @@ namespace PathfindingDedicatedServer.Nav.Crowds
       double delay = (double)_tickRate - GetCurrentElapsedTime();
       return delay <= 0 ? 0 : delay;
     }
-
-
 
     public S_MonstersLocationUpdate GetMonsterLocations()
     {
@@ -250,7 +248,7 @@ namespace PathfindingDedicatedServer.Nav.Crowds
       _monsterAgents.Add(monsterIdx, agent.idx);
       Console.WriteLine($"monster[ {monsterIdx} ] spawned at Vector3({pos.X},{pos.Y},{pos.Z})");
       
-      UpdateImmediately();
+      //UpdateImmediately();
       
       // Query NavMesh
       //RcVec3f center = new(-5.04f, 0.55f, 135.68f);
