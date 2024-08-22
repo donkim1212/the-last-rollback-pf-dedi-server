@@ -1,3 +1,16 @@
 {
-
+  "name": "agent_update_flags_index",
+  "version": "1.0.0",
+  "data": [
+    {"name": "", "flags": 31},
+    {"name": "", "flags": 18},
+    {"name": "", "flags": 27},
+    {"name": "", "flags": 8},
+    {"name": "", "flags": 7},
+    {"name": "", "flags": 3},
+    {"name": "", "flags": 9},
+    {"name": "", "flags": 26},
+    {"name": "", "flags": 6}
+  ]
 }
+
