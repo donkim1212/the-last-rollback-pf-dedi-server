@@ -15,8 +15,12 @@ namespace PathfindingDedicatedServer.Src.Utils
       };
     }
 
-    public static RcVec3f ToRcVector(WorldPosition pos)
+    public static RcVec3f ToRcVector(WorldPosition? pos)
     {
+      if (pos == null)
+      {
+        return RcVec3f.Zero;
+      }
       return new()
       {
         X = pos.X,

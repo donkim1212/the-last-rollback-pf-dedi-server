@@ -1,31 +1,24 @@
 ﻿using DotRecast.Core.Numerics;
+using DotRecast.Detour.Crowd;
+using PathfindingDedicatedServer.Src.Utils;
 
 namespace PathfindingDedicatedServer.Src.Monsters
 {
-  public enum AgentType
-  {
-    NONE = 0,
-    PLAYER = 1,
-    MONSTER = 2,
-    STRUCTURE = 3,
-    BASE = 4,
-  }
-
   public class AgentAdditionalData
   {
-    public readonly AgentType agentType;
+    public readonly AgentFlag agentFlag;
     private int _prevTargeAgentIdx = -2;
     private int _targetAgentIdx = -1; // Defaults to base, value is temporary
     private float _targetActualDistance = 100f;
 
     public AgentAdditionalData()
     {
-      agentType = AgentType.NONE;
+      agentFlag = AgentFlag.NONE;
     }
 
-    public AgentAdditionalData(AgentType agentType)
+    public AgentAdditionalData(AgentFlag agentType)
     {
-      this.agentType = agentType;
+      this.agentFlag = agentType;
     }
 
     public void SetTargetAgentIdx(int targetAgentIdx)
@@ -52,7 +45,12 @@ namespace PathfindingDedicatedServer.Src.Monsters
 
     public void SetTargetActualDistance (RcVec3f myPos, float myRad, RcVec3f targetPos, float targetRad)
     {
-      Utils.Utils.CalcActualDistance(myPos, myRad, targetPos, targetRad);
+      _targetActualDistance = Utils.Utils.CalcActualDistance(myPos, myRad, targetPos, targetRad);
+    }
+
+    public void SetTargetActualDistance (DtCrowdAgent agent, DtCrowdAgent target)
+    {
+      SetTargetActualDistance(agent.npos, agent.option.radius, target.npos, target.option.radius);
     }
 
     public float GetTargetActualDistance ()
@@ -60,9 +58,14 @@ namespace PathfindingDedicatedServer.Src.Monsters
       return _targetActualDistance;
     }
 
-    public bool IsAgentType(AgentType agentType)
+    public bool IsAgentFlag(AgentFlag agentType)
     {
-      return this.agentType == agentType;
+      return this.agentFlag == agentType;
+    }
+
+    public bool TargetChanged()
+    {
+      return _prevTargeAgentIdx != _targetActualDistance;
     }
   }
 }

@@ -6,9 +6,6 @@ using PathfindingDedicatedServer.Src.Constants;
 using PathfindingDedicatedServer.Src.Data;
 using PathfindingDedicatedServer.Src.Monsters;
 using PathfindingDedicatedServer.Src.Utils;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Reflection;
 
 namespace PathfindingDedicatedServer.Nav.Crowds
 {
@@ -29,7 +26,7 @@ namespace PathfindingDedicatedServer.Nav.Crowds
     private readonly DtCrowd _crowd;
     private readonly uint _dungeonCode;
     private NavManagerState _state = NavManagerState.NONE;
-    private readonly int _tickRate = 20; // ms
+    private readonly int _tickRate = ServerConstants.TICK_RATE; // ms
 
     private readonly S_PlayersLocationUpdate _plu = new() { Positions = [] };
     private readonly S_MonstersLocationUpdate _mlu = new() { Positions = [] };
@@ -47,7 +44,6 @@ namespace PathfindingDedicatedServer.Nav.Crowds
     private RcVec3f _basePos;
     private long _baseRef;
     private int _baseIdx;
-    private float _baseRad;
 
     public NavManager(uint dungeonCode) : this(dungeonCode, new DtCrowdConfig(0.6f), NavMeshManager.GetNavMesh(dungeonCode))
     {
@@ -66,8 +62,6 @@ namespace PathfindingDedicatedServer.Nav.Crowds
       );
       _baseRef = result.NearestRef;
       _basePos = result.NearestPt;
-      _baseIdx = -1; // temp
-      _baseRad = Storage.GetStructureAgentInfo(0).radius;
     }
 
     public void Start()
@@ -81,15 +75,12 @@ namespace PathfindingDedicatedServer.Nav.Crowds
       _state = NavManagerState.RUNNING;
       _startTime = DateTime.UtcNow;
       _prevTime = _startTime;
-
-      //_ = Task.Run(() => GameLoop());
     }
 
     public void End()
     {
       _state = NavManagerState.ENDING;
 
-      // TODO: cleanup?
       _monsterAgents.Clear();
       _monsterOptions.Clear();
       _playerAgents.Clear();
@@ -102,27 +93,6 @@ namespace PathfindingDedicatedServer.Nav.Crowds
     {
       _state = NavManagerState.WAITING;
     }
-
-    //private async Task GameLoop()
-    //{
-    //  _startTime = DateTime.UtcNow;
-    //  _prevTime = _startTime;
-    //  int count = 0;
-    //  while (_state == NavManagerState.RUNNING)
-    //  {
-    //    var deltaTime = UpdateImmediately();
-    //    Console.WriteLine($"[{count++}], deltaTime: {deltaTime}s");
-
-    //    double elapsed = (DateTime.UtcNow - _curTime).TotalMilliseconds;
-    //    if (elapsed < _tickRate)
-    //    {
-    //      await Task.Delay(_tickRate - (int)elapsed);
-    //    }
-        
-    //  }
-
-    //  Console.WriteLine("Game loop ended.");
-    //}
 
     private void Update(float deltaTime)
     {
@@ -172,7 +142,6 @@ namespace PathfindingDedicatedServer.Nav.Crowds
       foreach (string accountId in _playerAgents.Keys)
       {
         RcVec3f? pos = GetPlayerPos(accountId);
-        //Console.WriteLine($"{accountId} pos: " + pos);
         if (pos == null) continue;
         _plu.Positions[accountId] = Utils.ToWorldPosition(pos.Value);
       }
@@ -267,15 +236,6 @@ namespace PathfindingDedicatedServer.Nav.Crowds
       _monsterAgents.Add(monsterIdx, agent.idx);
       Console.WriteLine($"monster[ {monsterIdx} ] spawned at Vector3({pos.X},{pos.Y},{pos.Z})");
       
-      //UpdateImmediately();
-      
-      // Query NavMesh
-      //RcVec3f center = new(-5.04f, 0.55f, 135.68f);
-      //RcVec3f halfExtents = new(3f, 1.5f, 3f);
-      //DtNavMeshQueryResult result = GetNavMeshQueryResult(center, 3f, 1.5f);
-
-      // Set the agent's initial target
-      //_crowd.RequestMoveTarget(agent, result.NearestRef, result.NearestPt);
       MoveToBase(agent);
       Console.WriteLine($"monsterIdx[ {monsterIdx} ] state: " + agent.state);
 
@@ -318,22 +278,6 @@ namespace PathfindingDedicatedServer.Nav.Crowds
         return _crowd.GetAgent(value);
       }
       return null;
-    }
-
-    public void RemoveMonster(uint monsterIdx)
-    {
-      _crowd.RemoveAgent(GetMonsterAgent(monsterIdx));
-      _monsterAgents.Remove(monsterIdx); // hmm
-    }
-
-    public void ClearMonsters()
-    {
-      foreach(uint monsterIdx in _monsterAgents.Keys)
-      {
-        _crowd.RemoveAgent(GetMonsterAgent(monsterIdx));
-      }
-      _monsterAgents.Clear();
-      //_monsterOptions.Clear();
     }
 
     public NavManagerState GetState()
@@ -391,65 +335,118 @@ namespace PathfindingDedicatedServer.Nav.Crowds
 
     public void AddStructure(int structureIdx, RcVec3f pos, DtCrowdAgentParams option)
     {
-      _structureAgents.Add(structureIdx, _crowd.AddAgent(pos, option).idx);
+      _structureOptions.Add(structureIdx, option);
+      if (option.userData is AgentAdditionalData agentData)
+      {
+        if (CustomAgentUtils.IsBase(agentData.agentFlag))
+        {
+          _structureAgents.Add(structureIdx, _crowd.AddAgent(_basePos, option).idx);
+        }
+        else
+        {
+          _structureAgents.Add(structureIdx, _crowd.AddAgent(pos, option).idx);
+        }
+      }
+      
     }
 
+    public void RemoveMonster(uint monsterIdx)
+    {
+      _crowd.RemoveAgent(GetMonsterAgent(monsterIdx));
+      _monsterAgents.Remove(monsterIdx); // hmm
+    }
+
+    public void ClearMonsters()
+    {
+      foreach (uint monsterIdx in _monsterAgents.Keys)
+      {
+        _crowd.RemoveAgent(GetMonsterAgent(monsterIdx));
+      }
+      _monsterAgents.Clear();
+      //_monsterOptions.Clear();
+    }
+
+    public void RemoveStructure(int structureIdx)
+    {
+      if (_structureAgents.TryGetValue(structureIdx, out int structureAgentIdx))
+      {
+        _structureAgents.Remove(structureIdx);
+        RemoveAgentByAgentIdx(structureAgentIdx);
+      }
+    }
+
+    private bool RemoveAgentByAgentIdx(int agentIdx)
+    {
+      try
+      {
+        _crowd.RemoveAgent(_crowd.GetAgent(agentIdx));
+        return true;
+      }
+      catch (Exception e)
+      {
+
+        return false;
+      }
+    }
+
+    /// <summary>
+    /// Updates monster's custom data, renew dest position if necessary.
+    /// </summary>
+    /// <param name="monsterIdx"></param>
     public void ReCalc(uint monsterIdx)
     {
       // Get agent
       DtCrowdAgent agent = GetMonsterAgent(monsterIdx);
-
-      // check current target
-      // - calc dist
-      // - if player, calc path
-      // - else, calc path if prevIdx == curIdx
-      if (agent.option.userData is AgentAdditionalData data)
+      if (agent.option.userData is AgentAdditionalData agentData)
       {
-        int targetAgentIdx = data.GetTargetAgentIdx();
-        var targetAgent = _crowd.GetAgent(targetAgentIdx);
-        
-        if (!CustomAgentUtils.CheckTargetAgentValidity(targetAgent))
+        // Get target agent
+        var targetAgentIdx = agentData.GetTargetAgentIdx();
+        if (targetAgentIdx < 0)
         {
-          // Target is a base
-          data.SetTargetActualDistance(
-            agent.npos,
-            agent.option.radius,
-            _basePos,
-            _baseRad
-          );
+          MoveToBase(agent);
+          return;
         }
-        else
+        var targetAgent = _crowd.GetAgent(targetAgentIdx);
+
+        if (targetAgent?.option.userData is AgentAdditionalData targetAgentData)
         {
-          if (targetAgent.option.userData is AgentAdditionalData targetUserData)
+          if (CustomAgentUtils.IsValidAgent(targetAgentData.agentFlag))
           {
-            if (targetUserData.IsAgentType(AgentType.MONSTER))
-            {
-              // TODO: always return if target is a monster
-              return;
+            // is a valid target
+            
+            if (CustomAgentUtils.IsMonster(targetAgentData.agentFlag))
+            { // is a monster
+              agentData.SetTargetActualDistance(0);
             }
-            if (targetUserData.IsAgentType(AgentType.STRUCTURE))
-            {
-              // TODO: path recalc only if prev target is not current target
-              if (data.GetPrevTargetAgentIdx() == targetAgentIdx) return;
+            else if (CustomAgentUtils.IsPlayer(targetAgentData.agentFlag))
+            { // is a player
+              MoveToTarget(targetAgent, targetAgent);
+              agentData.SetTargetActualDistance(agent, targetAgent);
             }
-            // TODO: sets target for path recalculation
-            MoveTo(agent, targetAgent.npos);
-            data.SetTargetActualDistance(
-              agent.npos,
-              agent.option.radius,
-              targetAgent.npos,
-              targetAgent.option.radius
-            );
+            else
+            { // is a structure or base
+              if (agent.state != DtCrowdAgentState.DT_CROWDAGENT_STATE_WALKING)
+              {
+                MoveToBase(agent);
+              }
+              agentData.SetTargetActualDistance(agent, targetAgent);
+            }
+            return;
           }
         }
+
+        // Not a valid target, reset to base?
+        Console.WriteLine("INVALID TARGET DETECTED");
+        MoveToBase(agent);
       }
     }
 
     public void ReCalcAll()
     {
-      foreach (var monster in _monsterAgents)
+      var arr = _monsterAgents.Keys.ToArray();
+      foreach (var monsterIdx in arr)
       {
-        ReCalc(monster.Key);
+        ReCalc(monsterIdx);
       }
     }
 
@@ -465,29 +462,21 @@ namespace PathfindingDedicatedServer.Nav.Crowds
         MoveToBase(agent);
         return;
       }
-      MoveTo(agent, targetAgent.npos);
+      MoveToTarget(agent, targetAgent);
     }
 
     public void SetMonsterDest(uint monsterIdx, TargetStructure target)
     {
       SetMonsterDest(monsterIdx, GetStructureAgent(target.StructureIdx));
-      //DtCrowdAgent agent = GetMonsterAgent(monsterIdx);
-      //if (agent.option.userData is not AgentAdditionalData data) return;
-      //data.targetAgentIdx = GetStructureAgent(target.StructureIdx).idx;
-      //MoveTo(agent, GetStructurePos(target.StructureIdx));
     }
 
     public void SetMonsterDest(uint monsterIdx, TargetPlayer target)
     {
       SetMonsterDest(monsterIdx, GetPlayerAgent(target.AccountId));
-      //if (GetMonsterAgent(monsterIdx).option.userData is not AgentAdditionalData data) return;
-      //data.targetAgentIdx = GetPlayerAgent(target.AccountId).idx;
-      //MoveTo(GetMonsterAgent(monsterIdx), GetPlayerPos(target.AccountId));
     }
 
     public void SetPlayerDest(string accountId, RcVec3f? pos)
     {
-      //Console.WriteLine($"Player dest set to: {pos.Value.X},{pos.Value.Y},{pos.Value.Z}");
       MoveTo(GetPlayerAgent(accountId), pos);
     }
 
@@ -498,42 +487,37 @@ namespace PathfindingDedicatedServer.Nav.Crowds
         Halt(agent);
         return;
       }
-      var result = GetNavMeshQueryResult(pos.Value, 3f, 1.5f);
+      var result = GetNavMeshQueryResult(pos.Value, 5f, 1.5f);
       _crowd.RequestMoveTarget(agent, result.NearestRef, result.NearestPt);
+    }
+
+    public void MoveToTarget (DtCrowdAgent agent, DtCrowdAgent targetAgent)
+    {
+      if (agent.option.userData is AgentAdditionalData agentData)
+      {
+        if (targetAgent.option.userData is AgentAdditionalData targetData)
+        { // valid target
+          agentData.SetTargetAgentIdx(targetAgent.idx);
+          MoveTo(agent, targetAgent.npos);
+        }
+        else
+        { // invalid target
+          agentData.SetTargetAgentIdx(agent.idx);
+          MoveTo(agent, agent.npos);
+        }
+      }
+      else
+      {
+        return;
+      }
     }
 
     public void MoveToBase (DtCrowdAgent agent)
     {
-      RcVec3f basePos = Storage.GetPos(_dungeonCode, PosType.BASE_SPAWNER, 0);
-      MoveTo(agent, basePos);
+      DtCrowdAgent baseAgent = _crowd.GetAgent(_structureAgents[0]);
+
+      MoveToTarget(agent, baseAgent);
       // TODO: Get nearest circular border position
-
-      //DtNavMeshQuery query = _crowd.GetNavMeshQuery();
-      // TODO: Get Base's poly ref
-      //query.FindNearestPoly(
-      //  Storage.GetPos(_dungeonCode, PosType.BASE_SPAWNER, 0),
-      //  new RcVec3f(3f, 1.5f, 3f),
-      //  _crowd.GetFilter(0),
-      //  out long nearestRef,
-      //  out RcVec3f nearestPt,
-      //  out bool isOverPoly
-      //);
-
-      //List<long> resultRef = [];
-      //List<long> resultParent = [];
-      //List<float> resultCost = [];
-      // TODO: Get nearest circular border point of the Base
-      //query.FindPolysAroundCircle(
-      //  agent.corridor.GetFirstPoly(),
-      //  nearestPt,
-      //  3f,
-      //  _crowd.GetFilter(0),
-      //  ref resultRef,
-      //  ref resultParent,
-      //  ref resultCost
-      //);
-
-      //_crowd.RequestMoveTarget(agent, resultRef.First(), )
     }
 
     public void Halt(DtCrowdAgent agent)
@@ -554,6 +538,5 @@ namespace PathfindingDedicatedServer.Nav.Crowds
     {
       Halt(GetMonsterAgent(monsterIdx));
     }
-
   }
 }

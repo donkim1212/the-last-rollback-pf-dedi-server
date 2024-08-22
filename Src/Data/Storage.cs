@@ -4,6 +4,7 @@ using DotRecast.Detour.Crowd;
 using PathfindingDedicatedServer.Src.Constants;
 using PathfindingDedicatedServer.Src.Data.Abstracts;
 using PathfindingDedicatedServer.Src.Monsters;
+using PathfindingDedicatedServer.Src.Utils;
 using PathfindingDedicatedServer.Src.Utils.FileLoader;
 using System.Collections.ObjectModel;
 
@@ -117,7 +118,7 @@ namespace PathfindingDedicatedServer.Src.Data
       {
         return _defaultCrowdAgentParams;
       }
-      return ConvertToDtAgentParams(info, AgentType.MONSTER);
+      return ConvertToDtAgentParams(info, AgentFlag.MONSTER);
     }
 
     public static DtCrowdAgentParams GetPlayerAgentInfo(uint charClass)
@@ -131,7 +132,7 @@ namespace PathfindingDedicatedServer.Src.Data
       {
         return _defaultCrowdAgentParams;
       }
-      return ConvertToDtAgentParams(info, AgentType.PLAYER);
+      return ConvertToDtAgentParams(info, AgentFlag.PLAYER);
     }
 
     public static DtCrowdAgentParams GetStructureAgentInfo(uint structureModel)
@@ -143,12 +144,20 @@ namespace PathfindingDedicatedServer.Src.Data
       StructureAgentInfo? info = StructureAgentData.Data.Find((data) => data.StructureModel == structureModel);
       if (info == null)
       {
-        return _defaultCrowdAgentParams;
+        Console.WriteLine($"structureModel {structureModel}");
+        Console.WriteLine($"-- Failed finding structureModel {structureModel}");
+        var ret = _defaultCrowdAgentParams;
+        ret.userData = new AgentAdditionalData(AgentFlag.STRUCTURE);
+        return ret;
       }
-      return ConvertToDtAgentParams(info, AgentType.STRUCTURE);
+      if (info.StructureModel == 0)
+      {
+        return ConvertToDtAgentParams(info, AgentFlag.BASE);
+      }
+      return ConvertToDtAgentParams(info, AgentFlag.STRUCTURE);
     }
 
-    private static DtCrowdAgentParams ConvertToDtAgentParams(AgentInfo agentInfo, AgentType agentType)
+    private static DtCrowdAgentParams ConvertToDtAgentParams(AgentInfo agentInfo, AgentFlag agentType)
     {
       return new()
       {

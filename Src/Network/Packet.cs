@@ -17,6 +17,8 @@ public class Packet
     C_SetMonsters = 12,
     C_SetPlayerDest = 13,
     C_SetMonsterDest = 14,
+    C_AddStructure = 15,
+    C_RemoveStructure = 16,
 
     S_PlayerLocationUpdate = 31,
     S_MonstersLocationUpdate = 32,
@@ -61,19 +63,33 @@ public class C_StartSession
 }
 
 [ProtoContract]
+public class C_AddStructure
+{
+  [ProtoMember(1)]
+  public WorldPosition WorldPosition { get; set; }
+  [ProtoMember(2)]
+  public Structure Structure { get; set; }
+}
+
+[ProtoContract]
+public class C_RemoveStructure
+{
+  [ProtoMember(1)]
+  public int StructureIdx { get; set; }
+}
+
+[ProtoContract]
 public class C_SetPlayers
 {
-  [ProtoMember(1)] // accountId : charClass
+  [ProtoMember(1)]
   public List<Player> Players { get; set; } = [];
-  //public Dictionary<string, uint> Players { get; set; } = [];
 }
 
 [ProtoContract]
 public class C_SetMonsters
 {
-  [ProtoMember(1)] // monsterIdx : monsterModel
+  [ProtoMember(1)]
   public List<Monster> Monsters { get; set; } = [];
-  //public MapField<uint, uint> Monsters { get; set; } = [];
 }
 
 [ProtoContract]
@@ -153,6 +169,15 @@ public class WorldPosition
   public float Y { get; set; }
   [ProtoMember(3)]
   public float Z { get; set; }
+}
+
+[ProtoContract]
+public class Structure
+{
+  [ProtoMember(1)]
+  public int StructureIdx { get; set; }
+  [ProtoMember(2)]
+  public uint StructureModel { get; set; }
 }
 
 [ProtoContract]
