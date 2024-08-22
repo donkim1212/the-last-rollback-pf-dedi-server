@@ -265,12 +265,20 @@ namespace PathfindingDedicatedServer.Nav.Crowds
 
     public DtCrowdAgent? GetMonsterAgent (uint monsterIdx)
     {
-      return _crowd.GetAgent(_monsterAgents[monsterIdx]);
+      if (_monsterAgents.TryGetValue(monsterIdx, out var agentIdx))
+      {
+        return _crowd.GetAgent(agentIdx);
+      }
+      return null;
     }
 
     public DtCrowdAgent? GetPlayerAgent (string accountId)
     {
-      return _crowd.GetAgent(_playerAgents[accountId]);
+      if (_playerAgents.TryGetValue(accountId, out var agentIdx))
+      {
+        return _crowd.GetAgent(agentIdx);
+      }
+      return null;
     }
 
     public DtCrowdAgent? GetStructureAgent(int structureIdx)
