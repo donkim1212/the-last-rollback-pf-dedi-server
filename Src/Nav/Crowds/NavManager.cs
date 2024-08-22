@@ -157,7 +157,8 @@ namespace PathfindingDedicatedServer.Nav.Crowds
     {
       try
       {
-        DtCrowdAgent agent = GetMonsterAgent(monsterIdx);
+        DtCrowdAgent? agent = GetMonsterAgent(monsterIdx);
+        if (agent == null) return null;
         return GetPosition(agent);
       }
       catch (Exception e)
@@ -171,7 +172,8 @@ namespace PathfindingDedicatedServer.Nav.Crowds
     {
       try
       {
-        DtCrowdAgent agent = GetPlayerAgent(accountId);
+        DtCrowdAgent? agent = GetPlayerAgent(accountId);
+        if (agent == null) return null;
         return GetPosition(agent);
       }
       catch (Exception e)
@@ -261,12 +263,12 @@ namespace PathfindingDedicatedServer.Nav.Crowds
       AddMonster(monsterIdx, value);
     }
 
-    public DtCrowdAgent GetMonsterAgent (uint monsterIdx)
+    public DtCrowdAgent? GetMonsterAgent (uint monsterIdx)
     {
       return _crowd.GetAgent(_monsterAgents[monsterIdx]);
     }
 
-    public DtCrowdAgent GetPlayerAgent (string accountId)
+    public DtCrowdAgent? GetPlayerAgent (string accountId)
     {
       return _crowd.GetAgent(_playerAgents[accountId]);
     }
@@ -360,7 +362,9 @@ namespace PathfindingDedicatedServer.Nav.Crowds
     {
       foreach (uint monsterIdx in _monsterAgents.Keys)
       {
-        _crowd.RemoveAgent(GetMonsterAgent(monsterIdx));
+        var agent = GetMonsterAgent(monsterIdx);
+        if (agent == null) continue;
+        _crowd.RemoveAgent(agent);
       }
       _monsterAgents.Clear();
       //_monsterOptions.Clear();
@@ -379,7 +383,9 @@ namespace PathfindingDedicatedServer.Nav.Crowds
     {
       try
       {
-        _crowd.RemoveAgent(_crowd.GetAgent(agentIdx));
+        var agent = _crowd.GetAgent(agentIdx);
+        if (agent == null) return false;
+        _crowd.RemoveAgent(agent);
         return true;
       }
       catch (Exception e)
@@ -400,8 +406,8 @@ namespace PathfindingDedicatedServer.Nav.Crowds
         return;
       }
       // Get agent
-      DtCrowdAgent agent = GetMonsterAgent(monsterIdx);
-      if (agent.option.userData is AgentAdditionalData agentData)
+      DtCrowdAgent? agent = GetMonsterAgent(monsterIdx);
+      if (agent?.option.userData is AgentAdditionalData agentData)
       {
         // Get target agent
         var targetAgentIdx = agentData.GetTargetAgentIdx();
@@ -456,11 +462,12 @@ namespace PathfindingDedicatedServer.Nav.Crowds
 
     public void SetMonsterDest(uint monsterIdx, DtCrowdAgent? targetAgent)
     {
-      DtCrowdAgent agent = GetMonsterAgent(monsterIdx);
-      if (agent.option.userData is AgentAdditionalData data)
+      DtCrowdAgent? agent = GetMonsterAgent(monsterIdx);
+      if (agent?.option.userData is AgentAdditionalData data)
       {
         data.SetTargetAgentIdx(targetAgent?.idx ?? -1);
       }
+      if (agent == null) return;
       if (targetAgent == null)
       {
         MoveToBase(agent);
@@ -481,7 +488,9 @@ namespace PathfindingDedicatedServer.Nav.Crowds
 
     public void SetPlayerDest(string accountId, RcVec3f? pos)
     {
-      MoveTo(GetPlayerAgent(accountId), pos);
+      var agent = GetPlayerAgent(accountId);
+      if (agent == null) return;
+      MoveTo(agent, pos);
     }
 
     public void MoveTo (DtCrowdAgent agent, RcVec3f? pos)
@@ -518,8 +527,7 @@ namespace PathfindingDedicatedServer.Nav.Crowds
 
     public void MoveToBase (DtCrowdAgent agent)
     {
-      DtCrowdAgent baseAgent = _crowd.GetAgent(_structureAgents[0]);
-
+      DtCrowdAgent baseAgent = _crowd.GetAgent(_structureAgents[0]) ?? throw new InvalidDataException("MoveToBase Error: base agent is missing");
       MoveToTarget(agent, baseAgent);
       // TODO: Get nearest circular border position
     }
@@ -535,12 +543,16 @@ namespace PathfindingDedicatedServer.Nav.Crowds
 
     public void Halt(string accountId)
     {
-      Halt(GetPlayerAgent(accountId));
+      var agent = GetPlayerAgent(accountId);
+      if (agent == null) return;
+      Halt(agent);
     }
 
     public void Halt(uint monsterIdx)
     {
-      Halt(GetMonsterAgent(monsterIdx));
+      var agent = GetMonsterAgent(monsterIdx)
+      if (agent == null) return;
+      Halt(agent);
     }
   }
 }

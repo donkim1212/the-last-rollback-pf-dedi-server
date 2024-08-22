@@ -281,7 +281,7 @@ namespace DotRecast.Detour.Crowd
             return ag;
         }
 
-        public DtCrowdAgent GetAgent(int idx)
+        public DtCrowdAgent? GetAgent(int idx)
         {
             return _agents.GetValueOrDefault(idx);
         }
