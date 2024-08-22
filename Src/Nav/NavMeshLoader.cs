@@ -18,24 +18,27 @@ public class NavMeshLoader
     try
     {
       // TODO: map the indices somehow
-      uint index = 1;
       string[] files = Directory.GetFiles(PathConstants.ASSETS_REL_PATH, PathConstants.NAVMESH_EXT, SearchOption.AllDirectories);
       foreach (string file in files)
       {
         DtNavMesh? navMesh = LoadNavMesh(file);
         if (navMesh != null)
         {
-          NavMeshManager.AddNavMesh(index, navMesh);
-          Console.WriteLine($"Loaded file: {file}");
+          // TODO: get index from filename
+          // ./Assets/001_town.navmesh
+          string[] split = file.Split('/');
+          uint idx = uint.Parse(split[split.Length - 1].Split('_')[0]);
+          
+          NavMeshManager.AddNavMesh(idx, navMesh);
+          Console.WriteLine($"[ {idx} ] Loaded {file}");
           float[] verts = navMesh.GetTile(1).data.verts;
           // Testing
-          Console.WriteLine($"-- id: {index} | Tile[1] verts: {verts[0]} {verts[1]} {verts[2]}");
+          Console.WriteLine($"-- id: {idx} | Tile[1] verts: {verts[0]} {verts[1]} {verts[2]}");
         }
         else
         {
           Console.WriteLine($"Failed loading file: {file}");
         }
-        index++;
       }
     } catch (Exception e)
     {

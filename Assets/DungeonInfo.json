@@ -8,7 +8,21 @@
     {"id": 13, "dungeonCode": 1, "posType": 1, "x": -46.71, "y": 0.48, "z": 132.75},
     {"id": 14, "dungeonCode": 1, "posType": 1, "x": -41.66, "y": 0.48, "z": 90.63},
     {"id": 15, "dungeonCode": 1, "posType": 1, "x": 35.48, "y": 0.48, "z": 88.26},
-	  {"id": 16, "dungeonCode": 1, "posType": 5, "x": -5.04, "y": 0.55, "z": 135.68}
+	{"id": 16, "dungeonCode": 1, "posType": 5, "x": -5.04, "y": 0.55, "z": 135.68},
+	{"id": 20, "dungeonCode": 2, "posType": 0, "x": 37.41, "y": 0.5953, "z": 61.64},
+    {"id": 21, "dungeonCode": 2, "posType": 1, "x": 78.8, "y": 0.57, "z": 29.0},
+    {"id": 22, "dungeonCode": 2, "posType": 1, "x": -22.64, "y": 1.95, "z": 46.48},
+    {"id": 23, "dungeonCode": 2, "posType": 1, "x": 49.69, "y": 5.06, "z": 92.44},
+    {"id": 24, "dungeonCode": 2, "posType": 1, "x": 37.38, "y": 1.05, "z": 130.99},
+    {"id": 25, "dungeonCode": 2, "posType": 1, "x": 0.8, "y": 1.352, "z": 109.2},
+	{"id": 26, "dungeonCode": 2, "posType": 5, "x": 31.33, "y": -0.26, "z": 61.02},
+	{"id": 30, "dungeonCode": 3, "posType": 0, "x": -3.31, "y": 8.98, "z": -106.05},
+    {"id": 31, "dungeonCode": 3, "posType": 1, "x": 26.306, "y": 9.221, "z": -99.5},
+    {"id": 32, "dungeonCode": 3, "posType": 1, "x": -27.8, "y": 9.26, "z": -99.5},
+    {"id": 33, "dungeonCode": 3, "posType": 1, "x": -3.28, "y": 9.17, "z": -60.638},
+    {"id": 34, "dungeonCode": 3, "posType": 1, "x": -3.5, "y": 9.08, "z": -137.1},
+    {"id": 35, "dungeonCode": 3, "posType": 1, "x": -3.5, "y": 9.17, "z": -67.96},
+	{"id": 36, "dungeonCode": 3, "posType": 5, "x": -3.5, "y": 8.03, "z": -112.83},
   ]
 }
 
