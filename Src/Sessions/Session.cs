@@ -70,7 +70,9 @@ namespace PathfindingDedicatedServer.Src.Sessions
             PacketType.S_PlayerLocationUpdate,
             _navManager.GetPlayerLocations()
           );
-          
+
+          _navManager.ReCalcAll();
+
           await Task.Delay((int)_navManager.GetMilliSecondsDelay());
 
           // TODOs
