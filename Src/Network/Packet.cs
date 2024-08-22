@@ -95,6 +95,13 @@ public class C_SetMonsterDest
 }
 
 [ProtoContract]
+public class C_MonsterDead
+{
+  [ProtoMember(1)]
+  public uint MonsterIdx { get; set; }
+}
+
+[ProtoContract]
 public class C_NightRoundStart
 {
   [ProtoMember(1)]
@@ -191,7 +198,7 @@ public class TargetPlayer : Target
 public class TargetStructure : Target
 {
   [ProtoMember(1)]
-  public uint StructureIdx { get; set; }
+  public int StructureIdx { get; set; }
 }
 
 //[ProtoContract]
