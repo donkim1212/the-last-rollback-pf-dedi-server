@@ -13,9 +13,12 @@
     VISIONARY_MOVER = 9,
 
     STRATEGIC_AVOIDER = 18,
+
+    DEFAULT = 24,
+
     EFFICIENT_MOVER = 26,
     PLAN_AHEAD = 27,
 
-    DEFAULT = 31
+    ALL_IN_ONE = 31
   }
 }
