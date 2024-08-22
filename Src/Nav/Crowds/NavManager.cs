@@ -352,7 +352,7 @@ namespace PathfindingDedicatedServer.Nav.Crowds
 
     public void RemoveMonster(uint monsterIdx)
     {
-      _crowd.RemoveAgent(GetMonsterAgent(monsterIdx));
+      //_crowd.RemoveAgent(GetMonsterAgent(monsterIdx));
       _monsterAgents.Remove(monsterIdx); // hmm
     }
 
@@ -395,6 +395,10 @@ namespace PathfindingDedicatedServer.Nav.Crowds
     /// <param name="monsterIdx"></param>
     public void ReCalc(uint monsterIdx)
     {
+      if (!_monsterAgents.ContainsKey(monsterIdx))
+      {
+        return;
+      }
       // Get agent
       DtCrowdAgent agent = GetMonsterAgent(monsterIdx);
       if (agent.option.userData is AgentAdditionalData agentData)
@@ -420,7 +424,7 @@ namespace PathfindingDedicatedServer.Nav.Crowds
             }
             else if (CustomAgentUtils.IsPlayer(targetAgentData.agentFlag))
             { // is a player
-              MoveToTarget(targetAgent, targetAgent);
+              MoveToTarget(agent, targetAgent);
               agentData.SetTargetActualDistance(agent, targetAgent);
             }
             else
