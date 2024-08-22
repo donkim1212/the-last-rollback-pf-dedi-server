@@ -1,5 +1,6 @@
 ﻿using ProtoBuf;
 using System.Buffers;
+using System.Security.Cryptography.X509Certificates;
 
 #pragma warning disable IDE1006, CA1050
 public class Packet
@@ -20,6 +21,7 @@ public class Packet
     S_PlayerLocationUpdate = 31,
     S_MonstersLocationUpdate = 32,
 
+    C_KillMonster = 40,
   }
 
   public static void Serialize<T>(IBufferWriter<byte> writer, T data)
@@ -97,6 +99,13 @@ public class C_NightRoundStart
 {
   [ProtoMember(1)]
   public ulong Timestamp { get; set; }
+}
+
+[ProtoContract]
+public class C_KillMonster
+{
+    [ProtoMember(1)]
+    public uint MonsterIdx { get; set; }
 }
 
 // ----- OUT -----
