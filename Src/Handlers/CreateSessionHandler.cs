@@ -8,7 +8,7 @@ namespace PathfindingDedicatedServer.Src.Handlers
   {
     public override void HandlePacket(NetworkStream stream, Guid id, byte[] bytes)
     {
-      Console.WriteLine("CreateSessionHandler called.");
+      //Console.WriteLine("CreateSessionHandler called.");
       C_CreateSession packet = Deserialize<C_CreateSession>(bytes);
       // TODO: create a session
       

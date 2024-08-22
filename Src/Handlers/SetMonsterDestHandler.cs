@@ -8,7 +8,7 @@ namespace PathfindingDedicatedServer.Src.Handlers
   {
     public override void HandlePacket(NetworkStream stream, Guid id, byte[] bytes)
     {
-      Console.WriteLine("SetMonsterDestHandler called.");
+      //Console.WriteLine("SetMonsterDestHandler called.");
       C_SetMonsterDest packet = Deserialize<C_SetMonsterDest>(bytes);
       if (packet.Target is TargetPlayer tp)
       {

@@ -9,7 +9,7 @@ namespace PathfindingDedicatedServer.Src.Handlers
   {
     public override void HandlePacket(NetworkStream stream, Guid id, byte[] bytes)
     {
-      Console.WriteLine("SetPlayerDestHandler called.");
+      //Console.WriteLine("SetPlayerDestHandler called.");
       C_SetPlayerDest packet = Deserialize<C_SetPlayerDest>(bytes);
       if (packet.Pos == null)
       {
