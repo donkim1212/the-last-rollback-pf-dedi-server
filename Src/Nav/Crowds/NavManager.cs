@@ -216,7 +216,8 @@ namespace PathfindingDedicatedServer.Nav.Crowds
     {
       try
       {
-        DtCrowdAgent agent = GetStructureAgent(structureIdx);
+        DtCrowdAgent? agent = GetStructureAgent(structureIdx);
+        if (agent == null) return null;
         return GetPosition(agent);
       }
       catch (Exception e)
@@ -407,14 +408,40 @@ namespace PathfindingDedicatedServer.Nav.Crowds
         int targetAgentIdx = data.GetTargetAgentIdx();
         var targetAgent = _crowd.GetAgent(targetAgentIdx);
         
-        data.SetTargetActualDistance(
-          agent.npos,
-          agent.option.radius,
-          targetAgent?.npos ?? _basePos,
-          targetAgent?.option.radius ?? _baseRad
-        );
-
-        //if ()
+        if (!CustomAgentUtils.CheckTargetAgentValidity(targetAgent))
+        {
+          // Target is a base
+          data.SetTargetActualDistance(
+            agent.npos,
+            agent.option.radius,
+            _basePos,
+            _baseRad
+          );
+        }
+        else
+        {
+          if (targetAgent.option.userData is AgentAdditionalData targetUserData)
+          {
+            if (targetUserData.IsAgentType(AgentType.MONSTER))
+            {
+              // TODO: always return if target is a monster
+              return;
+            }
+            if (targetUserData.IsAgentType(AgentType.STRUCTURE))
+            {
+              // TODO: path recalc only if prev target is not current target
+              if (data.GetPrevTargetAgentIdx() == targetAgentIdx) return;
+            }
+            // TODO: sets target for path recalculation
+            MoveTo(agent, targetAgent.npos);
+            data.SetTargetActualDistance(
+              agent.npos,
+              agent.option.radius,
+              targetAgent.npos,
+              targetAgent.option.radius
+            );
+          }
+        }
       }
     }
 

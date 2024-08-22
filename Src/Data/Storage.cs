@@ -20,10 +20,10 @@ namespace PathfindingDedicatedServer.Src.Data
       collisionQueryRange = 0.6f,
       pathOptimizationRange = 10f, // temp
       separationWeight = 0,
-      updateFlags = DtCrowdAgentUpdateFlags.DT_CROWD_ANTICIPATE_TURNS,
+      updateFlags = (int) CustomAgentUpdateFlag.DEFAULT,
       obstacleAvoidanceType = 0,
       queryFilterType = 0,
-      userData = new(),
+      userData = new AgentAdditionalData(),
     };
     public static MonsterAgentData? MonsterAgentData { get; set; }
     public static PlayerAgentData? PlayerAgentData { get; set; }
@@ -117,7 +117,7 @@ namespace PathfindingDedicatedServer.Src.Data
       {
         return _defaultCrowdAgentParams;
       }
-      return ConvertToDtAgentParams(info);
+      return ConvertToDtAgentParams(info, AgentType.MONSTER);
     }
 
     public static DtCrowdAgentParams GetPlayerAgentInfo(uint charClass)
@@ -131,7 +131,7 @@ namespace PathfindingDedicatedServer.Src.Data
       {
         return _defaultCrowdAgentParams;
       }
-      return ConvertToDtAgentParams(info);
+      return ConvertToDtAgentParams(info, AgentType.PLAYER);
     }
 
     public static DtCrowdAgentParams GetStructureAgentInfo(uint structureModel)
@@ -145,10 +145,10 @@ namespace PathfindingDedicatedServer.Src.Data
       {
         return _defaultCrowdAgentParams;
       }
-      return ConvertToDtAgentParams(info);
+      return ConvertToDtAgentParams(info, AgentType.STRUCTURE);
     }
 
-    private static DtCrowdAgentParams ConvertToDtAgentParams(AgentInfo agentInfo)
+    private static DtCrowdAgentParams ConvertToDtAgentParams(AgentInfo agentInfo, AgentType agentType)
     {
       return new()
       {
@@ -162,7 +162,7 @@ namespace PathfindingDedicatedServer.Src.Data
         updateFlags = agentInfo.UpdateFlags, // needs checking
         obstacleAvoidanceType = agentInfo.ObsAvoidanceType,
         queryFilterType = agentInfo.QueryFilterType,
-        userData = new AgentAdditionalData(),
+        userData = new AgentAdditionalData(agentType),
       };
     }
 

@@ -2,11 +2,31 @@
 
 namespace PathfindingDedicatedServer.Src.Monsters
 {
-  internal class AgentAdditionalData
+  public enum AgentType
   {
+    NONE = 0,
+    PLAYER = 1,
+    MONSTER = 2,
+    STRUCTURE = 3,
+    BASE = 4,
+  }
+
+  public class AgentAdditionalData
+  {
+    public readonly AgentType agentType;
     private int _prevTargeAgentIdx = -2;
     private int _targetAgentIdx = -1; // Defaults to base, value is temporary
     private float _targetActualDistance = 100f;
+
+    public AgentAdditionalData()
+    {
+      agentType = AgentType.NONE;
+    }
+
+    public AgentAdditionalData(AgentType agentType)
+    {
+      this.agentType = agentType;
+    }
 
     public void SetTargetAgentIdx(int targetAgentIdx)
     {
@@ -40,5 +60,9 @@ namespace PathfindingDedicatedServer.Src.Monsters
       return _targetActualDistance;
     }
 
+    public bool IsAgentType(AgentType agentType)
+    {
+      return this.agentType == agentType;
+    }
   }
 }

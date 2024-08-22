@@ -95,13 +95,6 @@ public class C_SetMonsterDest
 }
 
 [ProtoContract]
-public class C_MonsterDead
-{
-  [ProtoMember(1)]
-  public uint MonsterIdx { get; set; }
-}
-
-[ProtoContract]
 public class C_NightRoundStart
 {
   [ProtoMember(1)]
