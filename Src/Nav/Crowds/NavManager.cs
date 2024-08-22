@@ -550,7 +550,7 @@ namespace PathfindingDedicatedServer.Nav.Crowds
 
     public void Halt(uint monsterIdx)
     {
-      var agent = GetMonsterAgent(monsterIdx)
+      var agent = GetMonsterAgent(monsterIdx);
       if (agent == null) return;
       Halt(agent);
     }
