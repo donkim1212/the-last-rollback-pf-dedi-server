@@ -6,6 +6,7 @@ using PathfindingDedicatedServer.Src.Constants;
 using PathfindingDedicatedServer.Src.Data;
 using static PathfindingDedicatedServer.Src.Utils.VectorUtils;
 using static PathfindingDedicatedServer.Src.Utils.CustomAgentUtils;
+using static PathfindingDedicatedServer.Src.Constants.NavConstants;
 using PathfindingDedicatedServer.Src.Nav.Crowds.Agents;
 using PathfindingDedicatedServer.Src.Nav.Crowds.Agents.Models;
 using PathfindingDedicatedServer.Src.Nav.Crowds;
@@ -49,7 +50,7 @@ namespace PathfindingDedicatedServer.Nav.Crowds
     private bool _spawnActive = false;
     private uint[] _spawnArr;
     private int _spawnIdx = 0;
-    private int _spawnInterval = 1500; // ms
+    private int _spawnInterval = SPAWN_INTERVAL; // ms
 
     private RcVec3f _basePos;
     private long _baseRef;
@@ -492,7 +493,7 @@ namespace PathfindingDedicatedServer.Nav.Crowds
         Halt(agent);
         return;
       }
-      var result = GetNavMeshQueryResult(pos.Value, 5f, 1.5f);
+      var result = GetNavMeshQueryResult(pos.Value, HORIZONTAL_SEARCH_RAD, VERTICAL_SEARCH_RAD);
       _crowd.RequestMoveTarget(agent, result.NearestRef, result.NearestPt);
     }
 
