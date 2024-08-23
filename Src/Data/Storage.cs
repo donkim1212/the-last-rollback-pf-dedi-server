@@ -1,12 +1,10 @@
-﻿using DotRecast.Core;
-using DotRecast.Core.Numerics;
+﻿using DotRecast.Core.Numerics;
 using DotRecast.Detour.Crowd;
 using PathfindingDedicatedServer.Src.Constants;
 using PathfindingDedicatedServer.Src.Data.Abstracts;
-using PathfindingDedicatedServer.Src.Monsters;
+using PathfindingDedicatedServer.Src.Nav.Crowds.Agents;
 using PathfindingDedicatedServer.Src.Utils;
 using PathfindingDedicatedServer.Src.Utils.FileLoader;
-using System.Collections.ObjectModel;
 
 namespace PathfindingDedicatedServer.Src.Data
 {

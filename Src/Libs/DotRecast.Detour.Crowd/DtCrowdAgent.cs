@@ -87,7 +87,7 @@ namespace DotRecast.Detour.Crowd
             animation = new DtCrowdAgentAnimation();
         }
 
-        public void Integrate(float dt)
+        public virtual void Integrate(float dt)
         {
             // Fake dynamic constraint.
             float maxDelta = option.maxAcceleration * dt;

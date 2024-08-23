@@ -1,3 +1,4 @@
+using PathfindingDedicatedServer.Src.Sessions;
 using System.Buffers;
 using System.Net;
 using System.Net.Sockets;
@@ -62,6 +63,7 @@ public class TcpClientHandler
       IPEndPoint? endPoint = _tcpClient.GetStream().Socket.RemoteEndPoint as IPEndPoint;
       Console.WriteLine($"[{endPoint?.Address}:{endPoint?.Port}] TcpClient closed.");
       _tcpClient.Close();
+      Console.WriteLine($"Session closed: {Session.RemoveSession(_id)}");
       _connections.Remove(_id);
     }
   }

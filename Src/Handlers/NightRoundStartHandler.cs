@@ -8,7 +8,7 @@ namespace PathfindingDedicatedServer.Src.Handlers
   {
     public override void HandlePacket(NetworkStream stream, Guid id, byte[] bytes)
     {
-      //Console.WriteLine("SetMonsterDestHandler called.");
+      Console.WriteLine("NightRoundStartHandler called.");
       C_NightRoundStart packet = Deserialize<C_NightRoundStart>(bytes);
 
       //packet.Timestamp;

@@ -3,7 +3,7 @@ using DotRecast.Core.Numerics;
 
 namespace PathfindingDedicatedServer.Src.Utils
 {
-  internal class Utils
+  public class VectorUtils
   {
     public static WorldPosition ToWorldPosition(RcVec3f pos)
     {
@@ -27,6 +27,11 @@ namespace PathfindingDedicatedServer.Src.Utils
         Y = pos.Y,
         Z = pos.Z
       };
+    }
+
+    public static bool VectorEquals(WorldPosition pos, RcVec3f other)
+    {
+      return (pos.X == other.X && pos.Y == other.Y && pos.Z == other.Z);
     }
 
     public static float CalcDistance (RcVec3f a, RcVec3f b)

@@ -12,7 +12,7 @@ namespace PathfindingDedicatedServer.Src.Handlers
       C_AddStructure packet = Deserialize<C_AddStructure>(bytes);
 
       var option = Storage.GetStructureAgentInfo(packet.Structure.StructureModel);
-      var worldPosition = Utils.Utils.ToRcVector(packet.WorldPosition);
+      var worldPosition = Utils.VectorUtils.ToRcVector(packet.WorldPosition);
 
       Session.GetSession(id).GetNavManager().AddStructure(
         packet.Structure.StructureIdx,
