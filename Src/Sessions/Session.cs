@@ -89,7 +89,7 @@ namespace PathfindingDedicatedServer.Src.Sessions
           }
 
           // Re-path
-          //_navManager.ReCalcAll();
+          _navManager.ReCalcAll();
 
           // Spawn if possible
           _navManager.TrySpawn();

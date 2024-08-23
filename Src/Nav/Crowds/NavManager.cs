@@ -423,10 +423,10 @@ namespace PathfindingDedicatedServer.Nav.Crowds
             }
             else
             { // is a structure or base
-              if (agent.state != DtCrowdAgentState.DT_CROWDAGENT_STATE_WALKING)
-              {
-                MoveToBase(agent);
-              }
+              //if (agent.state != DtCrowdAgentState.DT_CROWDAGENT_STATE_WALKING)
+              //{
+              //  MoveToBase(agent);
+              //}
               //agentData.SetTargetActualDistance(agent, targetAgent);
             }
             return;
