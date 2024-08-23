@@ -19,3 +19,4 @@
 
 ![스크린샷 2024-08-15 173331](https://github.com/user-attachments/assets/f7f128e6-dcfd-468f-b1d3-68984c853e32)
 ![스크린샷 2024-08-16 001408](https://github.com/user-attachments/assets/b7bad15b-26fa-4a08-8a64-9b5bd06127d5)
+![image](https://github.com/user-attachments/assets/d114c6ae-2d79-4178-8b19-7fce2cde9860)
