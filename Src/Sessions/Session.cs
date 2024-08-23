@@ -1,7 +1,5 @@
 ﻿using PathfindingDedicatedServer.Nav.Crowds;
-using PathfindingDedicatedServer.Src.Constants;
 using PathfindingDedicatedServer.Src.Network;
-using System.Net.Sockets;
 using static Packet;
 
 namespace PathfindingDedicatedServer.Src.Sessions
@@ -58,21 +56,45 @@ namespace PathfindingDedicatedServer.Src.Sessions
           throw new InvalidOperationException("No TcpClientHandler found for the session.");
         }
         _navManager.Start();
+        int prevMonsterCount = 0;
+        int prevPlayerCount = 0;
         while (_navManager.GetState() == NavManagerState.RUNNING)
         {
-          var deltaTime = _navManager.UpdateImmediately();
+          // Update DtCrowd
+          var deltaTime = _navManager.Update();
           //Console.WriteLine($"deltaTime: {deltaTime}s");
+
+          // Send position packets
+          var monsterLocations = _navManager.GetMonsterLocations();
           _ = clientHandler.SendPacket<S_MonstersLocationUpdate>(
             PacketType.S_MonstersLocationUpdate,
-            _navManager.GetMonsterLocations()
+            monsterLocations
           );
+          if (prevMonsterCount != monsterLocations.Positions.Count)
+          {
+            prevMonsterCount = monsterLocations.Positions.Count;
+            Console.WriteLine($"Monsters count: {prevMonsterCount}");
+          }
+          
+          var playerLocations = _navManager.GetPlayerLocations();
           _ = clientHandler.SendPacket<S_PlayersLocationUpdate>(
             PacketType.S_PlayerLocationUpdate,
-            _navManager.GetPlayerLocations()
+            playerLocations
           );
 
-          _navManager.ReCalcAll();
+          if (prevPlayerCount != playerLocations.Positions.Count)
+          {
+            prevPlayerCount = playerLocations.Positions.Count;
+            Console.WriteLine($"Players count: {prevMonsterCount}");
+          }
 
+          // Re-path
+          //_navManager.ReCalcAll();
+
+          // Spawn if possible
+          _navManager.TrySpawn();
+
+          // wait for remaining frame time
           await Task.Delay((int)_navManager.GetMilliSecondsDelay());
 
           // TODOs
@@ -106,36 +128,14 @@ namespace PathfindingDedicatedServer.Src.Sessions
       
     }
 
-    public async void StartSpawning (ulong timestamp)
+    public void StartSpawning(ulong timestamp)
     {
-      NavManager nav = GetNavManager();
-      uint[] arr = [.. nav.GetMonsterIndices()];
-      foreach (uint monsterIdx in arr)
-      {
-        try
-        {
-          nav.AddMonster(monsterIdx);
-          await Task.Delay(1500);
-        } catch (Exception e)
-        {
-          Console.WriteLine($"Failed spawning monster with idx {monsterIdx}");
-          if (LoggerConstants.VERBOSE)
-          {
-            Console.WriteLine(e);
-          }
-        }
-      }
-      Console.WriteLine($"Done spawning {arr.Length} monsters");
+      _navManager.StartSpawn(timestamp);
     }
 
     public NavManager GetNavManager()
     {
       return _navManager;
     }
-
-    //public void SendPacket(Packet.PacketType packetType)
-    //{
-
-    //}
   }
 }
