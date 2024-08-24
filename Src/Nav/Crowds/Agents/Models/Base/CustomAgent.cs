@@ -81,18 +81,6 @@ namespace PathfindingDedicatedServer.Src.Nav.Crowds.Agents.Models.Base
         vel = RcVec3f.Zero;
     }
 
-    /// <summary>
-    /// Sets prev pos prevPos, and return whether the given prev pos is NOT equals to previous prev pos.
-    /// </summary>
-    /// <param name="prevPos">new prevPos</param>
-    /// <returns>FALSE if _ppos == prevPos, TRUE otherwise.</returns>
-    //public bool SetPrevPos(RcVec3f prevPos)
-    //{
-    //  if (ppos.Equals(prevPos)) return false;
-    //  ppos = prevPos;
-    //  return true;
-    //}
-
     public AgentAdditionalData GetUserData()
     {
 
