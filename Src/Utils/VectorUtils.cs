@@ -34,18 +34,18 @@ namespace PathfindingDedicatedServer.Src.Utils
       return (pos.X == other.X && pos.Y == other.Y && pos.Z == other.Z);
     }
 
-    public static float CalcDistance (RcVec3f a, RcVec3f b)
+    public static float CalcDistance(RcVec3f a, RcVec3f b)
     {
       RcVec3f diff = a - b;
-      return (float) Math.Sqrt(RcMath.Sqr(diff.X) + RcMath.Sqr(diff.Y) + RcMath.Sqr(diff.Z));
+      return (float)Math.Sqrt(RcMath.Sqr(diff.X) + RcMath.Sqr(diff.Y) + RcMath.Sqr(diff.Z));
     }
 
-    public static float CalcActualDistance (RcVec3f a, float aRad, RcVec3f b, float bRad)
+    public static float CalcActualDistance(RcVec3f a, float aRad, RcVec3f b, float bRad)
     {
       return Math.Abs(CalcDistance(a, b) - (aRad + bRad));
     }
 
-    public static RcVec3f CalcDirectionNormalized (RcVec3f from, RcVec3f to)
+    public static RcVec3f CalcDirectionNormalized(RcVec3f from, RcVec3f to)
     {
       RcVec3f diff = from - to;
       float magnitude = (float)Math.Sqrt(RcMath.Sqr(diff.X) + RcMath.Sqr(diff.Y) + RcMath.Sqr(diff.Z));

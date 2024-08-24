@@ -7,7 +7,7 @@ namespace PathfindingDedicatedServer.Src.Nav.Crowds.Agents.Models
   public class StructureAgent : CustomAgent
   {
     public readonly int structureIdx;
-    public StructureAgent (int structureIdx, int agentIdx) : base(agentIdx)
+    public StructureAgent(int structureIdx, int agentIdx) : base(agentIdx)
     {
       this.structureIdx = structureIdx;
     }

@@ -5,7 +5,7 @@ public class NavMeshManager
 {
   private static readonly Dictionary<uint, DtNavMesh> _navMeshes = [];
 
-  public static void AddNavMesh (uint dungeonCode, DtNavMesh navMesh)
+  public static void AddNavMesh(uint dungeonCode, DtNavMesh navMesh)
   {
     ArgumentNullException.ThrowIfNull(dungeonCode);
     ArgumentNullException.ThrowIfNull(navMesh);

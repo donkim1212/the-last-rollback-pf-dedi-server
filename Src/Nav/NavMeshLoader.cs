@@ -1,11 +1,9 @@
-﻿using System;
-using System.IO;
-using DotRecast.Core;
+﻿using DotRecast.Core;
 using DotRecast.Detour;
 using DotRecast.Detour.Io;
 using DotRecast.Recast;
-using PathfindingDedicatedServer.Src.Constants;
 using PathfindingDedicatedServer.Nav.Config;
+using PathfindingDedicatedServer.Src.Constants;
 
 namespace PathfindingDedicatedServer.Nav;
 public class NavMeshLoader
@@ -28,7 +26,7 @@ public class NavMeshLoader
           // ./Assets/001_town.navmesh
           string[] split = file.Split('/');
           uint idx = uint.Parse(split[split.Length - 1].Split('_')[0]);
-          
+
           NavMeshManager.AddNavMesh(idx, navMesh);
           Console.WriteLine($"[ {idx} ] Loaded {file}");
           float[] verts = navMesh.GetTile(1).data.verts;
@@ -40,7 +38,8 @@ public class NavMeshLoader
           Console.WriteLine($"Failed loading file: {file}");
         }
       }
-    } catch (Exception e)
+    }
+    catch (Exception e)
     {
       Console.WriteLine("LoadAllNavMeshAssets Error: " + e.Message);
     }
@@ -61,7 +60,7 @@ public class NavMeshLoader
 
       DtMeshSetReader reader = new();
 
-      DtNavMesh navMesh = reader.Read(br, MyRcConfig.VERTS_PER_POLY);
+      DtNavMesh navMesh = reader.Read(br, MyRcConfigConstants.VERTS_PER_POLY);
       if (navMesh == null)
       {
         throw new InvalidOperationException("LoadNavMesh failed to read NavMesh.");

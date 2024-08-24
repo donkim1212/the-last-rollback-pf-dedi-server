@@ -5,7 +5,7 @@ namespace PathfindingDedicatedServer.Src.Utils.FileLoader
 {
   public class JsonFileLoader : FileLoader
   {
-    private readonly JsonSerializerOptions option = new ()
+    private readonly JsonSerializerOptions option = new()
     {
       AllowTrailingCommas = true,
       MaxDepth = 64,

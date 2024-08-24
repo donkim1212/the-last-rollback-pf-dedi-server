@@ -19,7 +19,7 @@ namespace PathfindingDedicatedServer.Src.Data
       collisionQueryRange = 0.6f,
       pathOptimizationRange = 10f, // temp
       separationWeight = 0,
-      updateFlags = (int) CustomAgentUpdateFlag.DEFAULT,
+      updateFlags = (int)CustomAgentUpdateFlag.DEFAULT,
       obstacleAvoidanceType = 0,
       queryFilterType = 0,
       userData = new AgentAdditionalData(),
@@ -36,7 +36,7 @@ namespace PathfindingDedicatedServer.Src.Data
 
     public static Random Rand { get; set; }
 
-    public static void InitStorage ()
+    public static void InitStorage()
     {
       JsonFileLoader loader = new();
       MonsterAgentData monsterData = loader.LoadFileFromAssets<MonsterAgentData>("MonsterAgentInfo.json");
@@ -59,15 +59,15 @@ namespace PathfindingDedicatedServer.Src.Data
       Console.WriteLine($"Loaded {dungeonData.Name}");
       Console.WriteLine($"-- version: {dungeonData.Version}");
       Console.WriteLine($"-- test: {dungeonData.Data.First().X}");
-      
+
       InitSpawnPosLists();
       Rand = new Random(ServerConstants.RANDOM_SEED);
     }
 
-    #pragma warning disable CS8602
-    private static void InitSpawnPosLists ()
+#pragma warning disable CS8602
+    private static void InitSpawnPosLists()
     {
-      foreach(DungeonInfo dungeonInfo in DungeonData.Data)
+      foreach (DungeonInfo dungeonInfo in DungeonData.Data)
       {
         var dict = GetDictionary(dungeonInfo.PosType);
         if (!dict.ContainsKey(dungeonInfo.DungeonCode))
@@ -80,14 +80,14 @@ namespace PathfindingDedicatedServer.Src.Data
       }
     }
 
-    private static void InitAgentInfoDictonaries ()
+    private static void InitAgentInfoDictonaries()
     {
 
     }
 
     private static Dictionary<uint, List<RcVec3f>>? GetDictionary(PosType posType)
     {
-      switch(posType)
+      switch (posType)
       {
         case (PosType.PLAYER_SPAWNER):
           return _playerSpawnPosList;
@@ -173,12 +173,12 @@ namespace PathfindingDedicatedServer.Src.Data
       };
     }
 
-    public static List<RcVec3f> GetSpawnPosList (uint dungeonCode, PosType posType)
+    public static List<RcVec3f> GetSpawnPosList(uint dungeonCode, PosType posType)
     {
       return GetDictionary(posType)[dungeonCode];
     }
 
-    public static RcVec3f GetRandomPos (uint dungeonCode, PosType posType)
+    public static RcVec3f GetRandomPos(uint dungeonCode, PosType posType)
     {
       var list = GetDictionary(posType)[dungeonCode];
       return list[Rand.Next(0, list.Count)];

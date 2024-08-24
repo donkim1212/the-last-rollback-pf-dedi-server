@@ -2,7 +2,6 @@ using PathfindingDedicatedServer.Src.Sessions;
 using System.Buffers;
 using System.Net;
 using System.Net.Sockets;
-using System.Reflection.PortableExecutable;
 using static Packet;
 
 namespace PathfindingDedicatedServer.Src.Network;
@@ -31,7 +30,8 @@ public class TcpClientHandler
 
   public static TcpClientHandler? GetTcpClientHandler(Guid id)
   {
-    if (_connections.TryGetValue(id, out var client)) {
+    if (_connections.TryGetValue(id, out var client))
+    {
       return client;
     }
     return null;

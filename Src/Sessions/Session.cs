@@ -7,7 +7,7 @@ namespace PathfindingDedicatedServer.Src.Sessions
   internal class Session
   {
     private static readonly Dictionary<Guid, Session> _sessions = [];
-    
+
     private readonly NavManager _navManager;
     private readonly Func<Task> _gameLoop;
     private readonly Guid _id;
@@ -32,8 +32,8 @@ namespace PathfindingDedicatedServer.Src.Sessions
       }
       return exists;
     }
-    
-    public Session (uint dungeonCode, Guid id)
+
+    public Session(uint dungeonCode, Guid id)
     {
       _navManager = new NavManager(dungeonCode);
       _gameLoop = StartGameLoop;
@@ -46,7 +46,7 @@ namespace PathfindingDedicatedServer.Src.Sessions
       _ = Task.Run(_gameLoop);
     }
 
-    public async Task StartGameLoop ()
+    public async Task StartGameLoop()
     {
       try
       {
@@ -75,7 +75,7 @@ namespace PathfindingDedicatedServer.Src.Sessions
             prevMonsterCount = monsterLocations.Positions.Count;
             Console.WriteLine($"Monsters count: {prevMonsterCount}");
           }
-          
+
           var playerLocations = _navManager.GetPlayerLocations();
           _ = clientHandler.SendPacket<S_PlayersLocationUpdate>(
             PacketType.S_PlayerLocationUpdate,
@@ -115,17 +115,19 @@ namespace PathfindingDedicatedServer.Src.Sessions
           // 3.
         }
         Console.WriteLine("Game loop ended.");
-      } catch (Exception e)
+      }
+      catch (Exception e)
       {
         // TODO: print error msg & stack trace
         Console.WriteLine(e.ToString());
-      } finally
+      }
+      finally
       {
         // TODO: release resources
         _navManager.End();
         RemoveSession(_id); // both gets GC'd (hopefully)
       }
-      
+
     }
 
     public void StartSpawning(ulong timestamp)

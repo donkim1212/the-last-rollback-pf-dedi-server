@@ -1,12 +1,8 @@
-using PathfindingDedicatedServer.Src.Constants;
 using PathfindingDedicatedServer.Nav;
-using PathfindingDedicatedServer.Nav.Crowds;
+using PathfindingDedicatedServer.Src.Data;
 using PathfindingDedicatedServer.Src.Network;
-using PathfindingDedicatedServer.Src.Utils;
-using PathfindingDedicatedServer.Src.Utils.FileLoader;
 using System.Net;
 using System.Net.Sockets;
-using PathfindingDedicatedServer.Src.Data;
 
 namespace PathfindingDedicatedServer;
 public class Program
@@ -15,19 +11,6 @@ public class Program
   {
     Init();
 
-    //NavManager cm = new (1);
-    //cm.Start();
-    //cm.AddMonster(1);
-    //cm.AddMonster(2);
-    //Console.WriteLine("pos: " + cm.GetMonsterPos(1));
-    //Console.WriteLine("pos: " + cm.GetMonsterPos(2));
-
-    //SchedulerUtils.SetIntervalAction(1000, () =>
-    //{
-    //  Console.WriteLine($"[ 1 ] pos: " + cm.GetMonsterPos(1));
-    //  Console.WriteLine($"[ 2 ] pos: " + cm.GetMonsterPos(2));
-    //});
-
     // Start the TCP server
     StartTcpServer();
   }
@@ -35,7 +18,9 @@ public class Program
   private static void Init()
   {
     Console.WriteLine("----- INIT START -----");
+    Console.WriteLine();
     DateTime startTime = DateTime.UtcNow;
+
     // Load all NavMeshes
     NavMeshLoader.LoadAllNavMeshAssets();
 
@@ -65,12 +50,6 @@ public class Program
         TcpClient tcpClient = tcpListener.AcceptTcpClient();
         Console.WriteLine("Client connected.");
 
-        // Handle the client connection in a separate thread
-        //Thread clientThread = new(start: HandleClient)
-        //{
-        //  IsBackground = true
-        //};
-        //clientThread.Start(tcpClient);
         _ = Task.Run(async () =>
         {
           await HandleClient(tcpClient);
@@ -107,29 +86,4 @@ public class Program
     }
 
   }
-
-  //private static async void HandleClient(object? obj)
-  //{
-  //  try
-  //  {
-  //    if (obj is not TcpClient tcpClient)
-  //    {
-  //      return;
-  //    }
-
-  //    TcpClientHandler handler = new (tcpClient);
-
-  //    handler.OnDataReceived += (data) =>
-  //    {
-  //      Console.WriteLine($"Received: {data}");
-  //    };
-
-  //    await handler.StartHandlingClientAsync();
-  //  }
-  //  catch (Exception e)
-  //  {
-  //    Console.WriteLine("HandleClient Error:" + e.Message);
-  //  }
-
-  //}
 }

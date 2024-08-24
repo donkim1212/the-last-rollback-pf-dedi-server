@@ -1,5 +1,4 @@
 ﻿using DotRecast.Core.Numerics;
-using DotRecast.Detour.Crowd;
 using PathfindingDedicatedServer.Src.Utils;
 
 namespace PathfindingDedicatedServer.Src.Nav.Crowds.Agents

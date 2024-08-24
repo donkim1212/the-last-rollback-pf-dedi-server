@@ -1,6 +1,5 @@
 ﻿using ProtoBuf;
 using System.Buffers;
-using System.Security.Cryptography.X509Certificates;
 
 #pragma warning disable IDE1006, CA1050
 public class Packet
@@ -12,7 +11,7 @@ public class Packet
     C_NightRoundStart = 5,
 
     C_CreateSession = 10,
-    
+
     C_SetPlayers = 11,
     C_SetMonsters = 12,
     C_SetPlayerDest = 13,
@@ -120,8 +119,8 @@ public class C_NightRoundStart
 [ProtoContract]
 public class C_KillMonster
 {
-    [ProtoMember(1)]
-    public uint MonsterIdx { get; set; }
+  [ProtoMember(1)]
+  public uint MonsterIdx { get; set; }
 }
 
 // ----- OUT -----

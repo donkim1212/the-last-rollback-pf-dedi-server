@@ -14,8 +14,8 @@ namespace PathfindingDedicatedServer.Nav
     private readonly RcVec3f _bmin;
     private readonly RcVec3f _bmax;
 
-    private readonly List<RcConvexVolume> _convexVolumes = new();
-    private readonly List<RcOffMeshConnection> _offMeshConnections = new();
+    private readonly List<RcConvexVolume> _convexVolumes = [];
+    private readonly List<RcOffMeshConnection> _offMeshConnections = [];
     private readonly RcTriMesh _mesh;
 
     public InputGeomProvider(RcObjImporterContext ctx) : this(ctx.vertexPositions, ctx.meshFaces)

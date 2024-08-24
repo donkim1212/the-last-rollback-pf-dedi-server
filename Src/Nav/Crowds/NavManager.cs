@@ -4,19 +4,17 @@ using DotRecast.Detour;
 using DotRecast.Detour.Crowd;
 using PathfindingDedicatedServer.Src.Constants;
 using PathfindingDedicatedServer.Src.Data;
-using static PathfindingDedicatedServer.Src.Utils.VectorUtils;
-using static PathfindingDedicatedServer.Src.Utils.CustomAgentUtils;
-using static PathfindingDedicatedServer.Src.Constants.NavConstants;
+using PathfindingDedicatedServer.Src.Nav.Crowds;
 using PathfindingDedicatedServer.Src.Nav.Crowds.Agents;
 using PathfindingDedicatedServer.Src.Nav.Crowds.Agents.Models;
-using PathfindingDedicatedServer.Src.Nav.Crowds;
 using System.Collections.Concurrent;
-using System.Linq;
-using System.Numerics;
+using static PathfindingDedicatedServer.Src.Constants.NavConstants;
+using static PathfindingDedicatedServer.Src.Utils.CustomAgentUtils;
+using static PathfindingDedicatedServer.Src.Utils.VectorUtils;
 
 namespace PathfindingDedicatedServer.Nav.Crowds
 {
-    public enum NavManagerState
+  public enum NavManagerState
   {
     NONE, WAITING, RUNNING, ENDING
   }
@@ -34,7 +32,7 @@ namespace PathfindingDedicatedServer.Nav.Crowds
     private readonly uint _dungeonCode;
     private NavManagerState _state = NavManagerState.NONE;
     private readonly int _tickRate = ServerConstants.TICK_RATE; // ms
-    private readonly RcAtomicInteger rcAtomicInteger = new (1);
+    private readonly RcAtomicInteger rcAtomicInteger = new(1);
 
     private readonly S_PlayersLocationUpdate _plu = new() { Positions = [] };
     private readonly S_MonstersLocationUpdate _mlu = new() { Positions = [] };
@@ -48,7 +46,7 @@ namespace PathfindingDedicatedServer.Nav.Crowds
     private DateTime _curTime;
     private DateTime _lastSpawnTime;
     private bool _spawnActive = false;
-    private uint[] _spawnArr;
+    private uint[] _spawnArr = [];
     private int _spawnIdx = 0;
     private int _spawnInterval = SPAWN_INTERVAL; // ms
 
@@ -68,7 +66,7 @@ namespace PathfindingDedicatedServer.Nav.Crowds
       _state = NavManagerState.WAITING;
       DtNavMeshQueryResult result = GetNavMeshQueryResult(
         Storage.GetPos(_dungeonCode, PosType.BASE_SPAWNER, 0),
-        3f, 
+        3f,
         2f
       );
       _baseRef = result.NearestRef;
@@ -155,7 +153,7 @@ namespace PathfindingDedicatedServer.Nav.Crowds
     {
       DtNavMeshQuery navQuery = _crowd.GetNavMeshQuery();
 
-      RcVec3f halfExtents = new (hRad, vRad, hRad);
+      RcVec3f halfExtents = new(hRad, vRad, hRad);
       navQuery.FindNearestPoly(
         pos,
         halfExtents,
@@ -412,7 +410,7 @@ namespace PathfindingDedicatedServer.Nav.Crowds
           if (IsValidAgent(targetAgentData.agentFlag))
           {
             // is a valid target
-            
+
             if (IsMonster(targetAgentData.agentFlag))
             { // is a monster
               //agentData.SetTargetActualDistance(0);
@@ -442,7 +440,7 @@ namespace PathfindingDedicatedServer.Nav.Crowds
 
     public void ReCalcExt(uint monsterIdx)
     {
-      
+
     }
 
     public void ReCalcAll()
@@ -486,7 +484,7 @@ namespace PathfindingDedicatedServer.Nav.Crowds
       MoveTo(agent, pos);
     }
 
-    public void MoveTo (DtCrowdAgent agent, RcVec3f? pos)
+    public void MoveTo(DtCrowdAgent agent, RcVec3f? pos)
     {
       if (pos == null || pos == agent.npos)
       {
@@ -497,7 +495,7 @@ namespace PathfindingDedicatedServer.Nav.Crowds
       _crowd.RequestMoveTarget(agent, result.NearestRef, result.NearestPt);
     }
 
-    public void MoveToTarget (DtCrowdAgent agent, DtCrowdAgent targetAgent)
+    public void MoveToTarget(DtCrowdAgent agent, DtCrowdAgent targetAgent)
     {
       if (agent.option.userData is AgentAdditionalData agentData)
       {
@@ -520,7 +518,7 @@ namespace PathfindingDedicatedServer.Nav.Crowds
       }
     }
 
-    public void MoveToBase (DtCrowdAgent agent)
+    public void MoveToBase(DtCrowdAgent agent)
     {
       DtCrowdAgent baseAgent = _crowd.GetAgent(0) ?? throw new InvalidDataException("MoveToBase Error: base agent is missing");
       MoveToTarget(agent, baseAgent);

@@ -8,7 +8,7 @@ namespace PathfindingDedicatedServer.Src.Nav.Crowds.Agents.Models
   {
     public readonly string accountId;
 
-    public PlayerAgent(string accountId, int agentIdx) : base (agentIdx)
+    public PlayerAgent(string accountId, int agentIdx) : base(agentIdx)
     {
       this.accountId = accountId;
     }

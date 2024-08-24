@@ -16,7 +16,7 @@
     private static readonly int VALID_FLAGS = 0xffff;
     private static readonly int MONSTER_TARGETABLE_FLAGS = CalcFlags([AgentFlag.PLAYER, AgentFlag.STRUCTURE, AgentFlag.BASE]);
 
-    public static int CalcFlags (AgentFlag[] flags)
+    public static int CalcFlags(AgentFlag[] flags)
     {
       int sum = 0;
       foreach (AgentFlag flag in flags)
@@ -36,37 +36,37 @@
     //  }
     //  return false;
     //}
-    public static bool IsPlayer (AgentFlag flag)
+    public static bool IsPlayer(AgentFlag flag)
     {
       return flag == AgentFlag.PLAYER;
     }
 
-    public static bool IsMonster (AgentFlag flag)
+    public static bool IsMonster(AgentFlag flag)
     {
       return flag == AgentFlag.MONSTER;
     }
 
-    public static bool IsStructure (AgentFlag flag)
+    public static bool IsStructure(AgentFlag flag)
     {
       return flag == AgentFlag.STRUCTURE;
     }
 
-    public static bool IsBase (AgentFlag flag)
+    public static bool IsBase(AgentFlag flag)
     {
       return flag == AgentFlag.BASE;
     }
 
-    public static bool IsMobileAgent (AgentFlag flag)
+    public static bool IsMobileAgent(AgentFlag flag)
     {
       return ((MOBILE_FLAGS & (int)flag) != 0);
     }
 
-    public static bool IsValidAgent (AgentFlag flag)
+    public static bool IsValidAgent(AgentFlag flag)
     {
       return ((VALID_FLAGS & (int)flag) != 0);
     }
 
-    public static bool IsMonsterTargetable (AgentFlag flag)
+    public static bool IsMonsterTargetable(AgentFlag flag)
     {
       return ((MONSTER_TARGETABLE_FLAGS & (int)flag) != 0);
     }

@@ -20,7 +20,7 @@ namespace PathfindingDedicatedServer.Src.Handlers
         RcVec3f pos = new(packet.Pos.X, packet.Pos.Y, packet.Pos.Z);
         Session.GetSession(id).GetNavManager().SetPlayerDest(packet.AccountId, pos);
       }
-      
+
     }
   }
 }

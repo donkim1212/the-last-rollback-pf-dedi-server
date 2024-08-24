@@ -25,7 +25,7 @@
         SetIntervalAction(ms, callback);
       });
     }
-    
+
     public static void SetIntervalAction(int ms, int count, Action callback)
     {
       if (count == 0) return;
