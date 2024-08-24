@@ -19,7 +19,7 @@ public class Packet
     C_AddStructure = 15,
     C_RemoveStructure = 16,
 
-    S_PlayerLocationUpdate = 31,
+    S_PlayersLocationUpdate = 31,
     S_MonstersLocationUpdate = 32,
 
     C_KillMonster = 40,

@@ -78,7 +78,7 @@ namespace PathfindingDedicatedServer.Src.Sessions
 
           var playerLocations = _navManager.GetPlayerLocations();
           _ = clientHandler.SendPacket<S_PlayersLocationUpdate>(
-            PacketType.S_PlayerLocationUpdate,
+            PacketType.S_PlayersLocationUpdate,
             playerLocations
           );
 
