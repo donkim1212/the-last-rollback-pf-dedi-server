@@ -3,6 +3,7 @@ using PathfindingDedicatedServer.Src.Data;
 using PathfindingDedicatedServer.Src.Network;
 using System.Net;
 using System.Net.Sockets;
+using static PathfindingDedicatedServer.Src.Constants.ServerConstants;
 
 namespace PathfindingDedicatedServer;
 public class Program
@@ -36,11 +37,10 @@ public class Program
   private static void StartTcpServer()
   {
     // Set up the TCP listener on port 5000
-    IPAddress localhost = IPAddress.Parse("127.0.0.1");
-    int port = 5507;
-    TcpListener tcpListener = new(localhost, port);
+    IPAddress localhost = IPAddress.Parse(HOST);
+    TcpListener tcpListener = new(localhost, PORT);
     tcpListener.Start();
-    Console.WriteLine($"TCP Server started on port {port}");
+    Console.WriteLine($"TCP Server started on port {PORT}");
 
     while (true)
     {
