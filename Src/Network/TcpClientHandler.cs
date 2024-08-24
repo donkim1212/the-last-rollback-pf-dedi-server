@@ -88,11 +88,6 @@ public class TcpClientHandler
       Action<NetworkStream, Guid, byte[]> handler = PacketManager.Instance.GetPacketHandler((int)packetType);
       handler?.Invoke(_tcpClient.GetStream(), _id, packetData);
     }
-    /*string request = Encoding.UTF8.GetString(data, 0, length);
-    OnDataReceived?.Invoke(request);
-
-    byte[] response = Encoding.UTF8.GetBytes("Hello from TCP server!");
-    _stream.WriteAsync(response, 0, response.Length);*/
   }
 
   public async Task SendPacket<T>(PacketType packetType, T data)
@@ -106,9 +101,6 @@ public class TcpClientHandler
     byte[] packet = new byte[header.Length + buffer.Length];
     Array.Copy(header, 0, packet, 0, header.Length);
     Array.Copy(buffer, 0, packet, header.Length, buffer.Length);
-
-    //Console.WriteLine("??? " + header.Length + "  " + packet.Length);
-    //Console.WriteLine("??? " + header[4]);
 
     _tcpClient.GetStream().Write(packet, 0, packet.Length);
   }
