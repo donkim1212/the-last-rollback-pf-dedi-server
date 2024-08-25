@@ -24,6 +24,7 @@ public class PacketManager
     _handlers.Add((int)Packet.PacketType.C_NightRoundStart, new NightRoundStartHandler());
     _handlers.Add((int)Packet.PacketType.C_KillMonster, new KillMonsterHandler());
     _handlers.Add((int)Packet.PacketType.C_AddStructure, new AddStructureHandler());
+    _handlers.Add((int)Packet.PacketType.C_RemoveStructure, new RemoveStructureHandler());
   }
 
   public Action<NetworkStream, Guid, byte[]> GetPacketHandler(int id)
