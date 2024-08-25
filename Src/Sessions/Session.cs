@@ -56,8 +56,6 @@ namespace PathfindingDedicatedServer.Src.Sessions
           throw new InvalidOperationException("No TcpClientHandler found for the session.");
         }
         _navManager.Start();
-        int prevMonsterCount = 0;
-        int prevPlayerCount = 0;
         while (_navManager.GetState() == NavManagerState.RUNNING)
         {
           // Update DtCrowd
@@ -70,23 +68,12 @@ namespace PathfindingDedicatedServer.Src.Sessions
             PacketType.S_MonstersLocationUpdate,
             monsterLocations
           );
-          if (prevMonsterCount != monsterLocations.Positions.Count)
-          {
-            prevMonsterCount = monsterLocations.Positions.Count;
-            Console.WriteLine($"Monsters count: {prevMonsterCount}");
-          }
 
           var playerLocations = _navManager.GetPlayerLocations();
           _ = clientHandler.SendPacket<S_PlayersLocationUpdate>(
             PacketType.S_PlayersLocationUpdate,
             playerLocations
           );
-
-          if (prevPlayerCount != playerLocations.Positions.Count)
-          {
-            prevPlayerCount = playerLocations.Positions.Count;
-            Console.WriteLine($"Players count: {prevMonsterCount}");
-          }
 
           // Re-path
           _navManager.ReCalcAll();
