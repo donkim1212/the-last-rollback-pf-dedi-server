@@ -958,7 +958,7 @@ namespace DotRecast.Detour.Crowd
             for (int i = 0; i < nids; ++i)
             {
                 var ag = GetAgent(ids[i]);
-                if (ag == null || ag == skip)
+                if (ag == null || skip == null || ag == skip)
                 {
                     continue;
                 }
