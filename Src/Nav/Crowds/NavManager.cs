@@ -529,7 +529,7 @@ namespace PathfindingDedicatedServer.Nav.Crowds
       {
         if (targetAgent.option.userData is AgentAdditionalData targetData)
         { // valid target
-          Console.WriteLine($"{agentData.agentFlag} moving to {targetData.agentFlag}");
+          //Console.WriteLine($"{agentData.agentFlag} moving to {targetData.agentFlag}");
           agentData.SetTargetAgentIdx(targetAgent.idx);
           MoveTo(agent, targetAgent.npos);
         }
