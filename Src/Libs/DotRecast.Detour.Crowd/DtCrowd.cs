@@ -236,7 +236,7 @@ namespace DotRecast.Detour.Crowd
         ///  @param[in]		pos		The requested position of the agent. [(x, y, z)]
         ///  @param[in]		params	The configuration of the agent.
         /// @return The index of the agent in the agent pool. Or -1 if the agent could not be added.
-        public DtCrowdAgent AddAgent(RcVec3f pos, DtCrowdAgentParams option)
+        public virtual DtCrowdAgent AddAgent(RcVec3f pos, DtCrowdAgentParams option)
         {
             int idx = _agentIdx.GetAndIncrement();
             DtCrowdAgent ag = new DtCrowdAgent(idx);
@@ -462,7 +462,7 @@ namespace DotRecast.Detour.Crowd
             for (var i = 0; i < agents.Count; i++)
             {
                 var ag = agents[i];
-                if (ag?.state != DtCrowdAgentState.DT_CROWDAGENT_STATE_WALKING) // _edit
+                if (ag == null || ag.state != DtCrowdAgentState.DT_CROWDAGENT_STATE_WALKING)
                 {
                     continue;
                 }
@@ -958,7 +958,7 @@ namespace DotRecast.Detour.Crowd
             for (int i = 0; i < nids; ++i)
             {
                 var ag = GetAgent(ids[i]);
-                if (ag == skip)
+                if (ag == null || ag == skip)
                 {
                     continue;
                 }
