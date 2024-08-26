@@ -39,6 +39,7 @@ namespace PathfindingDedicatedServer.Nav.Crowds
 
     private readonly ConcurrentDictionary<string, PlayerAgent> _players = [];
     private readonly ConcurrentDictionary<uint, MonsterAgent> _monsters = [];
+    private readonly object _monstersLock = new object();
     private readonly ConcurrentDictionary<int, StructureAgent> _structures = [];
 
     private DateTime _startTime;
@@ -122,14 +123,17 @@ namespace PathfindingDedicatedServer.Nav.Crowds
 
     public S_MonstersLocationUpdate GetMonsterLocations()
     {
-      _mlu.Positions.Clear();
-      foreach (var monster in _monsters)
+      lock (_monstersLock)
       {
-        if (monster.Value.vel.Equals(RcVec3f.Zero)) continue;
-        //Console.WriteLine($"[ {monster.Key} ] monster moved");
-        _mlu.Positions.TryAdd(monster.Key, ToWorldPosition(monster.Value.npos));
+        _mlu.Positions.Clear();
+        foreach (var monster in _monsters)
+        {
+          if (monster.Value.vel.Equals(RcVec3f.Zero)) continue;
+          //Console.WriteLine($"[ {monster.Key} ] monster moved");
+          _mlu.Positions.TryAdd(monster.Key, ToWorldPosition(monster.Value.npos));
+        }
+        return _mlu;
       }
-      return _mlu;
     }
 
     public S_PlayersLocationUpdate GetPlayerLocations()
