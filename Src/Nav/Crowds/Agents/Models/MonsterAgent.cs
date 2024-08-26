@@ -7,6 +7,7 @@ namespace PathfindingDedicatedServer.Src.Nav.Crowds.Agents.Models
   public class MonsterAgent : CustomAgent
   {
     public readonly uint monsterIdx;
+    public bool isAlive = true;
 
     public MonsterAgent(uint monsterIdx, int agentIdx) : base(agentIdx)
     {

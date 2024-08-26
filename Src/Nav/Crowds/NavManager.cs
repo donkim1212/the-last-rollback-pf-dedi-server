@@ -39,6 +39,7 @@ namespace PathfindingDedicatedServer.Nav.Crowds
 
     private readonly ConcurrentDictionary<string, PlayerAgent> _players = [];
     private readonly ConcurrentDictionary<uint, MonsterAgent> _monsters = [];
+    //private readonly ConcurrentDictionary<uint, bool> _activeMonsters = [];
     private readonly object _monstersLock = new object();
     private readonly ConcurrentDictionary<int, StructureAgent> _structures = [];
 
@@ -93,6 +94,7 @@ namespace PathfindingDedicatedServer.Nav.Crowds
 
       _players.Clear();
       _monsters.Clear();
+      //_activeMonsters.Clear();
       _structures.Clear();
     }
 
@@ -182,14 +184,20 @@ namespace PathfindingDedicatedServer.Nav.Crowds
     /// <param name="monsters">key: monsterIdx, value: monsterModel</param>
     public void SetMonsters(Dictionary<uint, uint> monsters)
     {
+      ClearMonsters();
       _monsters.Clear();
+      //_activeMonsters.Clear();
       foreach (var monster in monsters)
       { // try catch?
         var option = Storage.GetMonsterAgentInfo(monster.Value);
         var pos = Storage.GetRandomPos(_dungeonCode, PosType.MONSTER_SPAWNER);
 
         MonsterAgent agent = new MonsterAgent(monster.Key, rcAtomicInteger.GetAndIncrement(), option, _crowd, pos);
-        _monsters.TryAdd(monster.Key, agent);
+        if (_monsters.TryAdd(monster.Key, agent))
+        {
+          //_activeMonsters.TryAdd(monster.Key, false);
+        }
+        
       }
       _spawnArr = [.. _monsters.Keys];
     }
@@ -237,6 +245,7 @@ namespace PathfindingDedicatedServer.Nav.Crowds
         return;
       }
       _crowd.AddAgent(agent);
+      agent.isAlive = true;
       Console.WriteLine($"[ {agent.monsterIdx} ] is currently {agent.state}");
       MoveToBase(agent);
     }
@@ -320,19 +329,32 @@ namespace PathfindingDedicatedServer.Nav.Crowds
       Console.WriteLine($"Invalid structure with idx [ {structureIdx} ]");
     }
 
+    public bool CheckMonster (uint monsterIdx)
+    {
+      //_activeMonsters
+      return true;
+    }
+
     public void RemoveMonster(uint monsterIdx)
     {
-      if (_monsters.TryRemove(monsterIdx, out var value))
+      if (_monsters.TryGetValue(monsterIdx, out var monster))
       {
-        _crowd.RemoveAgent(value);
+        monster.isAlive = false;
+        Halt(monster);
       }
+      //if (_monsters.TryRemove(monsterIdx, out var value))
+      //{
+      //  _crowd.RemoveAgent(value);
+      //}
     }
 
     public void ClearMonsters()
     {
       foreach (uint monsterIdx in _monsters.Keys)
       {
-        RemoveMonster(monsterIdx);
+        var monster = GetMonsterAgent(monsterIdx);
+        if (monster != null) 
+          _crowd.RemoveAgent(monster);
       }
       _monsters.Clear();
     }
@@ -398,7 +420,8 @@ namespace PathfindingDedicatedServer.Nav.Crowds
       }
       // Get agent
       DtCrowdAgent? agent = GetMonsterAgent(monsterIdx);
-      if (agent?.option.userData is AgentAdditionalData agentData)
+      if (agent == null) return;
+      if (agent.option.userData is AgentAdditionalData agentData)
       {
         // Get target agent
         var targetAgentIdx = agentData.GetTargetAgentIdx();
@@ -457,12 +480,13 @@ namespace PathfindingDedicatedServer.Nav.Crowds
 
     public void SetMonsterDest(uint monsterIdx, DtCrowdAgent? targetAgent)
     {
-      DtCrowdAgent? agent = GetMonsterAgent(monsterIdx);
-      if (agent?.option.userData is AgentAdditionalData data)
+      MonsterAgent? agent = GetMonsterAgent(monsterIdx) as MonsterAgent;
+      if (agent == null) return;
+      if (!agent.isAlive) return;
+      if (agent.option.userData is AgentAdditionalData data)
       {
         data.SetTargetAgentIdx(targetAgent?.idx ?? -1);
       }
-      if (agent == null) return;
       if (targetAgent == null)
       {
         MoveToBase(agent);
