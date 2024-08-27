@@ -85,7 +85,7 @@
 
 | 이름           | email    | github              |
 |----------------|-------------------------------|-----------------------------|
-|장성원          | []() | [https://github.com/eliotjang](https://github.com/eliotjang) |
+|장성원          | eliotjang2@gmail.com | [https://github.com/eliotjang](https://github.com/eliotjang) |
 |김동균          | donkim0122@gmail.com | [https://github.com/donkim1212](https://github.com/donkim1212) |
 |윤동협          | []() | [https://github.com/ydh1503](https://github.com/ydh1503) |
 |박지호          | []() | [https://github.com/Hoji1998](https://github.com/Hoji1998) |
