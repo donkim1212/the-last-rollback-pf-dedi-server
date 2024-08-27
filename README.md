@@ -89,7 +89,7 @@
 |김동균          | donkim0122@gmail.com | [https://github.com/donkim1212](https://github.com/donkim1212) |
 |윤동협          | ydh23203727@gmail.com | [https://github.com/ydh1503](https://github.com/ydh1503) |
 |박지호          | bjh1157@naver.com | [https://github.com/Hoji1998](https://github.com/Hoji1998) |
-|양현언          | []() | [https://github.com/HyuneonY](https://github.com/HyuneonY) |
+|양현언          | kkx3695@naver.com | [https://github.com/HyuneonY](https://github.com/HyuneonY) |
 |황정민          | gwa446@gmail.com | [https://github.com/mimihimesama](https://github.com/mimihimesama) |
 
 <br>
