@@ -1,11 +1,12 @@
-# (WIP) Pathfinding Dedicated Server for '**The Last Rollback**'
+# Pathfinding Dedicated Server for '**The Last Rollback**'
 
 ## Introduction
 
- 내배캠 스파르타 Node.js 5기 게임서버 최종 프로젝트
- 12팀 'The Last Rollback' 의 길찾기 Dedicated Server 입니다.
+ 스파르타 내일배움캠프 Node.js 5기 게임서버 최종 프로젝트
+ 12팀 'The Last Rollback' 의 'The Last Rollback' 게임 개발 프로젝트에서 사용되는 Dedicated Server 입니다.
 
 - [The Last Rollback](https://github.com/eliotjang/the-last-rollback-server) 프로젝트 repo
+- [Brosure](https://www.notion.so/eliotjang/12-Rules-for-Life-3d4bbae7340d4a98bd97ac411c45a1de)  브로셔
 
 <br> 
 
@@ -14,6 +15,54 @@
 - [protobuf-net](https://github.com/protobuf-net/protobuf-net)
 
 <br>
+
+## Directory Structure
+```
+
+├─Assets
+├─Properties
+└─Src
+    ├─Constants
+    ├─Data
+    │  └─Abstracts
+    ├─Handlers
+    │  └─abstracts
+    ├─Libs
+    │  ├─DotRecast.Core
+    │  │  ├─Buffers
+    │  │  ├─Collections
+    │  │  ├─Compression
+    │  │  └─Numerics
+    │  ├─DotRecast.Detour
+    │  │  ├─bin
+    │  │  │  └─Debug
+    │  │  │      ├─net6.0
+    │  │  │      ├─net7.0
+    │  │  │      ├─net8.0
+    │  │  │      └─netstandard2.1
+    │  │  └─Io
+    │  ├─DotRecast.Detour.Crowd
+    │  ├─DotRecast.Detour.Dynamic
+    │  │  ├─Colliders
+    │  │  └─Io
+    │  ├─DotRecast.Detour.TileCache
+    │  │  └─Io
+    │  │      └─Compress
+    │  └─DotRecast.Recast
+    │      └─Geom
+    ├─Nav
+    │  ├─Config
+    │  ├─Crowds
+    │  │  └─Agents
+    │  │      └─Models
+    │  │          └─Base
+    │  └─QueryFilters
+    ├─Network
+    ├─Sessions
+    └─Utils
+        └─FileLoader
+
+```
 
 ## Screenshots
 
