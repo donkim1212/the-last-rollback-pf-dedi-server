@@ -16,6 +16,11 @@
 
 <br>
 
+## Service Architecture
+![image](https://github.com/user-attachments/assets/1eb36a53-7021-4609-9f00-9d2d432527a0)
+
+<br>
+
 ## Directory Structure
 ```
 
