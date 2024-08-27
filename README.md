@@ -3,7 +3,7 @@
 ## Introduction
 
  스파르타 내일배움캠프 Node.js 5기 게임서버 최종 프로젝트
- 12팀 'The Last Rollback' 의 'The Last Rollback' 게임 개발 프로젝트에서 사용되는 Dedicated Server 입니다.
+ 12팀 'The Last Rollback' 의 'The Last Rollback' 게임 개발 프로젝트에서 사용되는 길 찾기 서버 입니다.
 
 - [The Last Rollback](https://github.com/eliotjang/the-last-rollback-server) 프로젝트 repo
 - [Brosure](https://www.notion.so/eliotjang/12-Rules-for-Life-3d4bbae7340d4a98bd97ac411c45a1de)  브로셔
