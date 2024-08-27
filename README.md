@@ -88,7 +88,7 @@
 |장성원          | eliotjang2@gmail.com | [https://github.com/eliotjang](https://github.com/eliotjang) |
 |김동균          | donkim0122@gmail.com | [https://github.com/donkim1212](https://github.com/donkim1212) |
 |윤동협          | ydh23203727@gmail.com | [https://github.com/ydh1503](https://github.com/ydh1503) |
-|박지호          | []() | [https://github.com/Hoji1998](https://github.com/Hoji1998) |
+|박지호          | bjh1157@naver.com | [https://github.com/Hoji1998](https://github.com/Hoji1998) |
 |양현언          | []() | [https://github.com/HyuneonY](https://github.com/HyuneonY) |
 |황정민          | []() | [https://github.com/mimihimesama](https://github.com/mimihimesama) |
 
