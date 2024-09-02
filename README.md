@@ -8,6 +8,10 @@
 - [The Last Rollback](https://github.com/eliotjang/the-last-rollback-server) 프로젝트 repo
 - [Brosure](https://www.notion.so/eliotjang/12-Rules-for-Life-3d4bbae7340d4a98bd97ac411c45a1de)  브로셔
 
+<br>
+
+![The Last Roll Back-최우수상](https://github.com/user-attachments/assets/32b7cfca-32c0-4dc7-ac12-809d17ddf3a4)
+
 <br> 
 
 ## Service Architecture
